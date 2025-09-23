@@ -26,7 +26,7 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   workers: 4,
   reporter: 'html',
-  timeout: 60000, // 60 giây mỗi test thay vì mặc định 30s
+  timeout: 60000,
   expect: { timeout: 10000 },
   
   use: {

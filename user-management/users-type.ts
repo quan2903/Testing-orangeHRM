@@ -1,7 +1,7 @@
 export type UserType = {
     UserRole: 'Admin' | 'ESS',
     EmployeeName: string, 
-    Status: 'Admin' | 'ESS', 
+    Status: 'Enabled' | 'Disabled', 
     Username: string, 
     Password: string, 
     ConfirmPassword: string

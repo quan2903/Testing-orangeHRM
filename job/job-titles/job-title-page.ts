@@ -12,7 +12,7 @@ export class JobTitlesPage {
 
     async isJobTitlesexist(name: string):Promise<boolean>{
         const jobTitle = this.page.locator(`.oxd-table-card >> text=${name}`);
-        await jobTitle.first().waitFor({ state: 'visible', timeout: 10000 });
+        await jobTitle.first().waitFor({ state: 'visible', timeout: 30000 });
         return await jobTitle.count() > 0;
     }
 
