@@ -5,7 +5,7 @@ export class AdminPage {
 
   async goto() {
     await this.page.getByRole('link').filter({ hasText: 'Admin' }).click();
-     await this.page.waitForURL('/admin/viewAdminModule', { timeout: 30000 });
+     await this.page.waitForURL('**/admin/viewSystemUsers', { timeout: 30000 });
   await this.page.waitForSelector('h6:has-text("Admin")', { timeout: 30000 });
   }
 

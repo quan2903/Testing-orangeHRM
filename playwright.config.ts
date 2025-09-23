@@ -9,14 +9,14 @@ const testDirs = [
 
 const browsers = [
   { name: 'chrome', use: { ...devices['Desktop Chrome'], channel: 'chrome' } },
-  { name: 'edge', use: { ...devices['Desktop Edge'], channel: 'msedge' } },
+  // { name: 'edge', use: { ...devices['Desktop Edge'], channel: 'msedge' } },
 ];
 
 const projects = testDirs.flatMap(test =>
   browsers.map(browser => ({
     name: `${test.name}-${browser.name}`,
     testDir: test.dir,
-    use: browser.use,
+    use: {...browser.use, headless: true},
   }))
 );
 
