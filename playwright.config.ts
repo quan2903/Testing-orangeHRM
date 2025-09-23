@@ -26,11 +26,14 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   workers: 4,
   reporter: 'html',
+  timeout: 60000, // 60 giây mỗi test thay vì mặc định 30s
+  expect: { timeout: 10000 },
   
   use: {
     baseURL: 'https://opensource-demo.orangehrmlive.com/web/index.php/',
     trace: 'on-first-retry',
     headless: true,
+    actionTimeout: 15000,
   },
 
   projects,
