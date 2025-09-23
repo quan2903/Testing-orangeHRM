@@ -6,12 +6,22 @@ export class UserPage{
 
     }
     async clickAddButton(){
-        const adminpage = new AdminPage(this.page);
-        await this.page.getByRole('button', {name: 'Save' });
+        await this.page.getByRole('button', {name: 'Save' }).click();
     }
-    async fillUsersDetails(UserRole: 'Admin' | 'ESS', EmployeeName: string, Status: 'Admin' | 'ESS', Username: string, Password: string, ConfirmPassword: string){
+    async fillUsersDetails(UserRole: 'Admin' | 'ESS', EmployeeName: string, Status: 'Enabled'|'Disabled', Username: string, Password: string, ConfirmPassword: string){
         await this.page.locator('.oxd-select-text').first().click();
         await this.page.getByRole('option', { name: UserRole }).click();
         await this.page.locator('.oxd-select-text.oxd-select-text--focus').click();
     }
+    async clickEditButton(name: string) {
+        const User = this.page.locator(`.oxd-table-card >> text=${name}`);
+        await User.first().waitFor({ state: 'visible', timeout: 10000 });
+        await User.locator('button:has(i.icon-pencil)').click();
+    }
+    async clickDeleteButton(name:string){
+        const User = this.page.locator(`.oxd-table-card >> text=${name}`);
+        await User.first().waitFor({ state: 'visible', timeout: 10000 });
+        await User.locator('button:has(i.icon-trash)').click();
+    }
+
 }

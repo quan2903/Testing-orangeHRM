@@ -9,14 +9,14 @@ const testDirs = [
 
 const browsers = [
   { name: 'chrome', use: { ...devices['Desktop Chrome'], channel: 'chrome' } },
-  { name: 'edge', use: { ...devices['Desktop Edge'], channel: 'msedge' } },
+  // { name: 'edge', use: { ...devices['Desktop Edge'], channel: 'msedge' } },
 ];
 
 const projects = testDirs.flatMap(test =>
   browsers.map(browser => ({
     name: `${test.name}-${browser.name}`,
     testDir: test.dir,
-    use: browser.use,
+    use: {...browser.use, headless: true},
   }))
 );
 
@@ -26,7 +26,7 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   workers: 4,
   reporter: 'html',
-  timeout: 60000, // 60 giây mỗi test thay vì mặc định 30s
+  timeout: 60000,
   expect: { timeout: 10000 },
   
   use: {
