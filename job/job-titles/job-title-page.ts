@@ -3,14 +3,23 @@ import { Page } from "playwright-core";
 export class JobTitlesPage {
   constructor(public page: Page) {}
 
-    async clickAddButton() {
-      await this.page.getByRole('button', { name: 'Add' }).click();
-    } 
+    async copyJobTitle(): Promise<string> {
+        const firstJobTitle = this.page.locator('.oxd-table-card').first();
+        await firstJobTitle.waitFor({ state: 'visible', timeout: 10000 });
+        const text = await firstJobTitle.textContent();
+        return text ? text.trim() : '';
+    }
 
-  async fillJobTitleDetails(jobTitle: string, jobDescription: string, note: string) {
-    await this.page.getByRole('textbox').nth(1).fill(jobTitle);
-    await this.page.getByRole('textbox', { name: 'Type description here' }).fill(jobDescription);
-    await this.page.getByRole('textbox', { name: 'Add note' }).fill(note);
-    await this.page.getByRole('button', { name: 'Save' }).click();
-  }
+    async isJobTitlesexist(name: string):Promise<boolean>{
+        const jobTitle = this.page.locator(`.oxd-table-card >> text=${name}`);
+        await jobTitle.first().waitFor({ state: 'visible', timeout: 10000 });
+        return await jobTitle.count() > 0;
+    }
+
+    
+    async clickDeleteButton(name: string) {
+        const jobTitle = this.page.locator(`.oxd-table-card >> text=${name}`);
+        await jobTitle.first().waitFor({ state: 'visible', timeout: 10000 });
+        await jobTitle.locator('button:has(i.icon-trash)').click();
+    }
 }

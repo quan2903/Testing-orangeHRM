@@ -24,6 +24,7 @@
     "escape-html": "^1.0.3",
     "etag": "^1.8.1",
     "express": "^5.1.0",
+    "faker": "^6.6.6",
     "finalhandler": "^2.1.0",
     "forwarded": "^0.2.0",
     "fresh": "^2.0.0",
@@ -75,6 +76,7 @@
     "wrappy": "^1.0.2"
   },
   "devDependencies": {
+    "@faker-js/faker": "^9.9.0",
     "@playwright/test": "^1.55.0",
     "@types/node": "^24.5.2"
   },

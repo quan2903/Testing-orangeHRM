@@ -1,6 +1,8 @@
-export type JobTitle = {
+type JobTitle = {
   name: string;
   description: string;
-  file: File | null;
   note: string;
+  file: { name: string; mimeType: string; buffer: Buffer } | null;
 };
+
+export default JobTitle;
