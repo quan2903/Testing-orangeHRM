@@ -33,7 +33,7 @@ export default defineConfig({
   use: {
     baseURL: 'https://opensource-demo.orangehrmlive.com/web/index.php/',
     trace: 'on-first-retry',
-    headless: false,
+    headless: true,
     actionTimeout: 15000,
   },
 
