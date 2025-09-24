@@ -14,6 +14,7 @@ export class JobTitlesPage {
         const jobTitle = this.page.locator(`.oxd-table-card >> text=${name}`);
         await jobTitle.first().waitFor({ state: 'visible', timeout: 30000 });
         return await jobTitle.count() > 0;
+        
     }
 
     

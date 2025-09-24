@@ -4,6 +4,7 @@ const testDirs = [
   { name: 'login-tests', dir: './login/login-test' },
   { name: 'other-tests', dir: './tests' },
   { name: 'jobtitle-tests', dir: './job/job-titles'},
+  { name: 'user-management-tests', dir: './user-management'},
   // thêm bao nhiêu folder test cũng được
 ];
 
@@ -32,7 +33,7 @@ export default defineConfig({
   use: {
     baseURL: 'https://opensource-demo.orangehrmlive.com/web/index.php/',
     trace: 'on-first-retry',
-    headless: true,
+    headless: false,
     actionTimeout: 15000,
   },
 
