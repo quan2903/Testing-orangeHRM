@@ -31,7 +31,7 @@ export class UserPage{
 
     const row = this.page.locator('.oxd-table-card').filter({ hasText: normalized });
     try {
-        await row.first().waitFor({ state: 'visible', timeout: 10000 }); // chờ đúng row có text
+        await row.first().waitFor({ state: 'visible', timeout: 10000 });
         return true;
         } catch {
         return false;
