@@ -1,14 +1,23 @@
 import { Page } from "playwright-core";
-import {AdminPage} from "../AdminPage";
-export class JobPage {
-    constructor(private page: Page) {}
+import { AdminPage } from "../AdminPage";
 
-    async goto() {
-        const adminPage = new AdminPage(this.page);
-        await adminPage.goto();
-        await this.page.getByText('Job').click();
-    }
-    async navigateToJobTitles() {
-        await this.page.getByRole('listitem').filter({ hasText: /^Job Titles$/ }).click();
-    }
+export class JobPage {
+  constructor(private page: Page) {}
+
+  async goto() {
+    const adminPage = new AdminPage(this.page);
+    await adminPage.goto();
+    const jobMenu = this.page.locator(".oxd-topbar-body-nav-tab-item", {
+      hasText: "Job",
+    });
+    await jobMenu.first().click();
+  }
+
+  async navigateToJobTitles() {
+    await this.goto();
+    await this.page
+      .getByRole("menuitem", { name: "Job Titles" })
+      .first()
+      .click();
+  }
 }
