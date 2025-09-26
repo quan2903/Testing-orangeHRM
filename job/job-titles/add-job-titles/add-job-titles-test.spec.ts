@@ -7,8 +7,7 @@
     import { AdminPage } from '../../../AdminPage';
     import { AddJobTitlesAction } from './add-job-titles-action';
     import JobTitle from '../job-titles-type';
-    import dotenv from 'dotenv';
-    dotenv.config();
+
     const ADMIN_USERNAME = process.env.ADMIN_USERNAME;
     const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 

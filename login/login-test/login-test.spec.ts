@@ -1,8 +1,6 @@
 import test from "playwright/test";
 import { LoginPage } from "../login-page/LoginPage";
-import dotenv from 'dotenv';
 
-dotenv.config();
 const ADMIN_USERNAME = process.env.ADMIN_USERNAME;
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 

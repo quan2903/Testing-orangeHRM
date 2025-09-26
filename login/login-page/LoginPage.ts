@@ -11,7 +11,6 @@ export class LoginPage {
     });
   }
     async login(username: string, password: string) {
-        await this.page.goto('auth/login'); 
         await this.page.getByRole('textbox', { name: 'Username' }).fill(username);
 
         await this.page.getByRole('textbox', { name: 'Password' }).fill(password);
