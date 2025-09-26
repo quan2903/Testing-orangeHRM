@@ -17,7 +17,7 @@ const projects = testDirs.flatMap(test =>
   browsers.map(browser => ({
     name: `${test.name}-${browser.name}`,
     testDir: test.dir,
-    use: {...browser.use, headless: true},
+    use: { headless: true},
   }))
 );
 
@@ -33,6 +33,7 @@ export default defineConfig({
   use: {
     baseURL: 'https://opensource-demo.orangehrmlive.com/web/index.php/',
     trace: 'on-first-retry',
+
     headless: true,
     actionTimeout: 15000,
   },

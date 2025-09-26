@@ -8,12 +8,13 @@
     import { AddJobTitlesAction } from './add-job-titles-action';
     import JobTitle from '../job-titles-type';
 
+    const ADMIN_USERNAME = process.env.ADMIN_USERNAME;
+    const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+
     test.beforeEach(async ({ page }) => {
         const loginpage = new LoginPage(page);
         await loginpage.goto();
-        await loginpage.login('admin', 'admin123');
-        const adminPage = new AdminPage(page);
-        await adminPage.goto();
+        await loginpage.login(ADMIN_USERNAME!, ADMIN_PASSWORD!);
         const jobpage = new JobPage(page);
         await jobpage.goto();
         await jobpage.navigateToJobTitles();
