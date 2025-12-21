@@ -10,13 +10,26 @@ export class JobTitlesPage {
         return text ? text.trim() : '';
     }
 
-    async isJobTitlesexist(name: string):Promise<boolean>{
-        const jobTitle = this.page.locator(`.oxd-table-card >> text=${name}`);
-        await jobTitle.first().waitFor({ state: 'visible', timeout: 30000 });
-        return await jobTitle.count() > 0;
-        
+    async clickAddButton(){
+        await this.page.getByRole('button', {name: 'Add' }).click();
     }
+    async isJobTitlesexist(name: string): Promise<boolean> {
+    const jobTitle = this.page.locator('.oxd-table-card', {
+        hasText: name
+    });
 
+    try {
+        await jobTitle.first().waitFor({ state: 'visible', timeout: 10000 });
+        return true;
+    } catch {
+        return false;
+    }
+    }
+    async clickEditButton(name: string) {
+        const jobTitle = this.page.locator(`.oxd-table-card >> text=${name}`);
+        await jobTitle.first().waitFor({ state: 'visible', timeout: 10000 });
+        await jobTitle.locator('button:has(i.icon-pencil)').click();
+    }
     
     async clickDeleteButton(name: string) {
         const jobTitle = this.page.locator(`.oxd-table-card >> text=${name}`);

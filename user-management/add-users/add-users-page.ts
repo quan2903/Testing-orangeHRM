@@ -8,7 +8,7 @@ export class AddUserPage{
         const adduserpage = new UserPage(this.page)
         await adduserpage.clickAddButton();
     }
-
+    
     async fillUserRole(UserRole: 'Admin' | 'ESS'){
         await this.page.locator('.oxd-input-group')
             .filter({ hasText: 'User Role' })
@@ -100,6 +100,9 @@ export class AddUserPage{
 
     async clickSaveButton(){
         await this.page.getByRole('button', {name: 'Save' }).click();
+    }
+    async clickCancelButton(){
+        await this.page.getByRole('button', {name: 'Cancel' }).click();
     }
 
     async isUserExist(name: string):Promise<boolean>{

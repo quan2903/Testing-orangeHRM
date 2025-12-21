@@ -20,4 +20,11 @@ export class JobPage {
       .first()
       .click();
   }
+  async navigateToPayGrades() {
+    await this.goto();
+    await this.page
+      .getByRole("menuitem", { name: "Pay Grades" })
+      .first()
+      .click();
+  }
 }

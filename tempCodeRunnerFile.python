@@ -1,0 +1,24 @@
+from docx import Document
+import os
+
+# ==== Cấu hình ====
+target_size_mb = 5          # 👉 Đổi số này thành dung lượng bạn muốn (MB)
+output_file = "file_5MB.docx"
+
+# ==== Bắt đầu tạo ====
+doc = Document()
+doc.add_heading('Tệp kiểm thử dung lượng', level=1)
+doc.add_paragraph('Đây là tệp Word tự sinh để đạt dung lượng mục tiêu.')
+
+# Sinh nội dung lặp để tăng kích thước
+text = "Nội dung kiểm thử - " + ("ABC123 " * 5000)
+
+while True:
+    doc.add_paragraph(text)
+    doc.save(output_file)
+    size_mb = os.path.getsize(output_file) / (1024 * 1024)
+    print(f"Đang tạo... {size_mb:.2f} MB", end="\r")
+    if size_mb >= target_size_mb:
+        break
+
+print(f"\n✅ Đã tạo {output_file} với dung lượng ~{size_mb:.2f} MB")

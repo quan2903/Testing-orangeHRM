@@ -144,8 +144,8 @@ export class UsersFactory {
         };
     }
 
-    createValidUser_Password_ChineseChars() {
-        const password = "密码123";
+    createValidUser_Password_OnlyNumberandLowerCase() {
+        const password = "matkhau123";
         return {
             UserRole: randomRole,
             EmployeeName: faker.string.alpha({ length: 1 }),
@@ -452,6 +452,39 @@ export class UsersFactory {
             ConfirmPassword: password
         };
     }
+    createInvalidUser_Password_6Chars_WithSpaceHead() {
+        const password = "  Pass11";
+        return { 
+            UserRole: randomRole,
+            EmployeeName: faker.string.alpha({ length: 1 }),
+            Status: randomStatus,
+            Username: faker.string.fromCharacters('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+[]{}|;:,.<>?', 10),
+            Password: password,
+            ConfirmPassword: password
+        };
+    }
 
-
+    createInvalidUser_Password_6Chars_WithSpaceTail() {
+        const password = "Pass11 ";
+        return { 
+            UserRole: randomRole,
+            EmployeeName: faker.string.alpha({ length: 1 }),
+            Status: randomStatus,
+            Username: faker.string.fromCharacters('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+[]{}|;:,.<>?', 10),
+            Password: password,
+            ConfirmPassword: password
+        };
+    } 
+    createInvalidUser_Password_6Chars() {
+        const password = "Pass11";
+        return { 
+            UserRole: randomRole,
+            EmployeeName: faker.string.alpha({ length: 1 }),
+            Status: randomStatus,
+            Username: faker.string.fromCharacters('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+[]{}|;:,.<>?', 10),
+            Password: password,
+            ConfirmPassword: password
+        };
+    }
+    
 }

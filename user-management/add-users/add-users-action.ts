@@ -80,5 +80,14 @@ export class AddUsersAction {
         return await page.isConfirmPasswordErrorVisible();
     }
 
+    async cancelAddUser() {
+        const page = new AddUserPage(this.page);
+        await page.clickCancelButton();
+    }
+
+    async isUserExist(name: string):Promise<boolean>{
+        const adduserpage = new AddUserPage(this.page)
+        return await adduserpage.isUserExist(name);
+    }
 
 }

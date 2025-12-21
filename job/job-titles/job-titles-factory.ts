@@ -6,11 +6,46 @@ export class JobTitleFactory {
 
   createValidNameWith1Characters(): JobTitle {
     return {
-      name: faker.string.alpha({ length: 5 }),
+      name: faker.string.alpha({ length: 1 }),
       description: faker.lorem.sentence(),
       note: faker.lorem.words(5),
       file: null,
-      ...this.base,
+    };
+  }
+  
+  createValidWithMinimalFields(): JobTitle {
+    return {
+      name: faker.person.jobTitle(),
+      description: "",
+      note: "",
+      file: null,
+    };
+  }
+
+  createNameAndDescriptionWith1Characters(): JobTitle {
+    return {
+      name: faker.string.alpha({ length: 1 }),
+      description: faker.string.alpha({ length: 1 }),
+      note: "",
+      file: null,
+    };
+  }
+
+  createNameAndDescriptionWith399Characters(): JobTitle {
+    return {
+      name: faker.string.alpha({ length: 399 }),
+      description: faker.string.alpha({ length: 399 }),
+      note: "",
+      file: null,
+    };
+  }
+
+  createNameAndDescriptionWith400Characters(): JobTitle {
+    return {
+      name: faker.string.alpha({ length: 400 }),
+      description: faker.string.alpha({ length: 400 }),
+      note: "",
+      file: null,
     };
   }
   createFakeFile(name: string, mimeType: string, sizeInMB: number) {
@@ -24,7 +59,6 @@ export class JobTitleFactory {
       description: "",
       note: "",
       file: null,
-      ...this.base,
     };
   }
 
@@ -34,7 +68,6 @@ export class JobTitleFactory {
       description:"",
       note: "",
       file: null,
-      ...this.base,
     };
   }
 
@@ -44,7 +77,6 @@ export class JobTitleFactory {
       description: "",
       note: "",
       file: null,
-      ...this.base,
     };
   }
 
@@ -54,7 +86,6 @@ export class JobTitleFactory {
       description: "",
       note: "",
       file: null,
-      ...this.base,
     };
   }
 
@@ -64,7 +95,6 @@ export class JobTitleFactory {
       description:"",
       note: "",
       file: null,
-      ...this.base,
     };
   }
 
@@ -74,7 +104,6 @@ export class JobTitleFactory {
       description: "",
       note: "",
       file: null,
-      ...this.base,
     };
   }
 
@@ -84,7 +113,6 @@ export class JobTitleFactory {
       description: "",
       note: "",
       file: null,
-      ...this.base,
     };
   }
 
@@ -94,7 +122,6 @@ export class JobTitleFactory {
       description: faker.string.alpha({ length: 1 }),
       note: "",
       file: null,
-      ...this.base,
     };
   }
 
@@ -104,7 +131,6 @@ export class JobTitleFactory {
       description: faker.string.alpha({ length: 399 }),
       note: "",
       file: null,
-      ...this.base,
     };
   }
 
@@ -114,7 +140,6 @@ export class JobTitleFactory {
       description: faker.string.alpha({ length: 400 }),
       note: "",
       file: null,
-      ...this.base,
     };
   }
 
@@ -124,7 +149,6 @@ export class JobTitleFactory {
       description: "!@#$%^&*()_+{}|:\"<>?-=[]\\;',./`~",
       note: "",
       file: null,
-      ...this.base,
     };
   }
 
@@ -134,8 +158,6 @@ export class JobTitleFactory {
       description: "",
       note: "",
       file: this.createFakeFile("largefile.txt", "text/plain", 0.99),
-
-      ...this.base,
     };
   }
 
@@ -145,7 +167,6 @@ export class JobTitleFactory {
       description: faker.lorem.sentence(),
       note: faker.lorem.words(5),
       file: null,
-      ...this.base,
     };
   }
 
@@ -155,7 +176,6 @@ export class JobTitleFactory {
       description: faker.lorem.sentence(),
       note: faker.lorem.words(5),
       file: null,
-      ...this.base,
     };
   }
 
@@ -165,7 +185,6 @@ export class JobTitleFactory {
       description: faker.lorem.sentence(),
       note: faker.lorem.words(5),
       file: null,
-      ...this.base,
     };
   }
 
@@ -175,7 +194,6 @@ export class JobTitleFactory {
       description: faker.lorem.sentence(),
       note: faker.lorem.words(5),
       file: null,
-      ...this.base,
     };
   }
 
@@ -185,7 +203,6 @@ export class JobTitleFactory {
       description: faker.lorem.sentence(),
       note: faker.lorem.words(5),
       file: null,
-      ...this.base,
     };
   }
 
@@ -195,7 +212,60 @@ export class JobTitleFactory {
       description: faker.lorem.sentence(),
       note: faker.lorem.words(5),
       file: null,
-      ...this.base,
+    };
+  }
+
+  createNameAndNoteWith399Characters(): JobTitle {
+    return {
+      name: faker.person.jobTitle(),
+      description: "",
+      note: faker.string.alpha({ length: 399 }),
+      file: null,
+    };
+  }
+
+  createNameAndNoteWith400Characters(): JobTitle {
+    return {
+      name: faker.person.jobTitle(),
+      description: "",
+      note: faker.string.alpha({ length: 400 }),
+      file: null,
+    };
+  }
+
+  createNameAndNoteWithSpecialCharacters(): JobTitle {
+    return {
+      name: faker.person.jobTitle(),
+      description: "",
+      note: "!@#$%^&*()_+{}|:\\\"<>?-=[]\\\\;',./`~",
+      file: null,
+    };
+  }
+
+  createAllFieldsFilled(): JobTitle {
+    return {
+      name: faker.person.jobTitle(),
+      description: faker.lorem.paragraph(),
+      note: faker.lorem.sentences(2),
+      file: this.createFakeFile('sample.txt', 'text/plain', 0.1),
+    };
+  }
+
+  createValidNoteByPastingText(): JobTitle {
+    return {
+      name: faker.person.jobTitle(),
+      description: faker.lorem.sentence(),
+      note: faker.lorem.paragraphs(2),
+      file: null,
+    };
+  }
+
+  createValidDescriptionByPastingText(): JobTitle {
+    return {
+      name: faker.person.jobTitle(),
+      description: faker.lorem.paragraphs(2),
+      note: faker.lorem.words(5),
+      file: null,
     };
   }
 
@@ -205,7 +275,6 @@ export class JobTitleFactory {
       description: "",
       note: "",
       file: null,
-      ...this.base,
     };
   }
 
@@ -215,7 +284,6 @@ export class JobTitleFactory {
       description: faker.lorem.sentence(),
       note: faker.lorem.words(5),
       file: null,
-      ...this.base,
     };
   }
 
@@ -225,7 +293,6 @@ export class JobTitleFactory {
       description: faker.lorem.sentence(),
       note: faker.lorem.words(5),
       file: null,
-      ...this.base,
     };
   }
 
@@ -244,7 +311,6 @@ export class JobTitleFactory {
       description: faker.lorem.sentence(),
       note: faker.lorem.words(5),
       file: null,
-      ...this.base,
     };
   }
 
@@ -254,7 +320,6 @@ export class JobTitleFactory {
       description: faker.lorem.sentence(),
       note: faker.lorem.words(5),
       file: null,
-      ...this.base,
     };
   }
 
@@ -264,7 +329,6 @@ export class JobTitleFactory {
       description: faker.lorem.sentence(),
       note: faker.lorem.words(5),
       file: null,
-      ...this.base,
     };
   }
 
@@ -274,7 +338,6 @@ export class JobTitleFactory {
       description: faker.lorem.sentence(401),
       note: faker.lorem.words(5),
       file: null,
-      ...this.base,
     };
   }
 
@@ -284,7 +347,6 @@ export class JobTitleFactory {
       description: faker.lorem.sentence(600),
       note: faker.lorem.words(5),
       file: null,
-      ...this.base,
     };
   }
 
@@ -294,7 +356,6 @@ export class JobTitleFactory {
       description: faker.lorem.sentence(),
       note: faker.lorem.words(5),
       file: this.createFakeFile("largefile.txt", "text/plain", 1.01),
-      ...this.base,
     };
   }
 
@@ -304,7 +365,6 @@ export class JobTitleFactory {
       description: faker.lorem.sentence(),
       note: faker.lorem.words(5),
       file: this.createFakeFile("largefile.txt", "text/plain", 10),
-      ...this.base,
     };
   }
 
@@ -314,7 +374,6 @@ export class JobTitleFactory {
       description: faker.lorem.sentence(),
       note: faker.lorem.words(5),
       file: this.createFakeFile("malware.exe", "application/x-msdownload", 1),
-      ...this.base,
     };
   }
 
@@ -324,7 +383,6 @@ export class JobTitleFactory {
       description: faker.lorem.sentence(),
       note: "This is a note with emojis 😊🚀💼",
       file: null,
-      ...this.base,
     };
   }
 
@@ -334,7 +392,6 @@ export class JobTitleFactory {
       description: faker.lorem.sentence(),
       note: faker.lorem.words(401),
       file: null,
-      ...this.base,
     };
   }
 
@@ -344,7 +401,6 @@ export class JobTitleFactory {
       description: faker.lorem.sentence(),
       note: faker.lorem.words(600),
       file: null,
-      ...this.base,
     };
   }
 
@@ -354,7 +410,6 @@ export class JobTitleFactory {
       description: faker.lorem.sentence(),
       note: faker.lorem.words(5),
       file: null,
-      ...this.base,
     };
   }
   createInvalidNameExistingWith1SpaceCharacterAtTheEnd(existingJob: string): JobTitle {
@@ -363,7 +418,6 @@ export class JobTitleFactory {
       description: faker.lorem.sentence(),
       note: faker.lorem.words(5),
       file: null,
-      ...this.base,
     };
   }
   createInvalidNameExistingWithLeadingSpaces(existingJob: string): JobTitle {
@@ -372,7 +426,6 @@ export class JobTitleFactory {
       description: faker.lorem.sentence(),
       note: faker.lorem.words(5),
       file: null,
-      ...this.base,
     };
   }
     createInvalidNameExistingWithTrailingSpaces(existingJob: string): JobTitle {
@@ -381,7 +434,6 @@ export class JobTitleFactory {
         description: faker.lorem.sentence(),
         note: faker.lorem.words(5),
         file: null,
-        ...this.base,
       };
     }
 }
