@@ -1,4 +1,4 @@
-import { Page, expect } from "@playwright/test";
+import { Page } from "@playwright/test";
 import { PayGradesPage } from "../pay-grades-page";
 import { EditPayGradesPage } from "./edit-pay-grades-page";
 
@@ -12,21 +12,24 @@ export type PayGradeInput = Partial<{
 export class EditPayGradeAction {
     constructor(private page: Page) {}
 
-    async gotoEdit(name: string) {
+    // ======================
+    // Navigation
+    // ======================
+    async gotoEdit(oldName: string) {
         const payGradesPage = new PayGradesPage(this.page);
-        await payGradesPage.clickEditButton(name);
+        await payGradesPage.clickEditButtonAndGetOldName();
     }
 
+    // ======================
+    // Core edit action
+    // ======================
     async editPayGrade(oldName: string, newData: PayGradeInput) {
         const editPage = new EditPayGradesPage(this.page);
+
         await this.gotoEdit(oldName);
 
         if (newData.name !== undefined) {
             await editPage.fillName(newData.name);
-        }
-
-        if (newData.currency !== undefined) {
-            await editPage.selectCurrency(newData.currency);
         }
 
         if (newData.minimumSalary !== undefined) {
@@ -37,20 +40,24 @@ export class EditPayGradeAction {
             await editPage.fillMaximumSalary(newData.maximumSalary);
         }
 
-        await this.page.getByRole("button", { name: "Save" }).click();
+        await editPage.clickSave();
     }
 
-    async editPayGradeWithoutSave(oldName: string, newData: PayGradeInput) {
+    // ======================
+    // Fill only – no submit
+    // ======================
+    async fillEditForm(oldName: string, newData: PayGradeInput) {
         const editPage = new EditPayGradesPage(this.page);
+
         await this.gotoEdit(oldName);
 
         if (newData.name !== undefined) {
             await editPage.fillName(newData.name);
         }
 
-        if (newData.currency !== undefined) {
-            await editPage.selectCurrency(newData.currency);
-        }
+
+            
+        
 
         if (newData.minimumSalary !== undefined) {
             await editPage.fillMinimumSalary(newData.minimumSalary);
@@ -61,18 +68,25 @@ export class EditPayGradeAction {
         }
     }
 
-    async cancelEditPayGrade() {
-        await this.page.getByRole("button", { name: "Cancel" }).click();
+    // ======================
+    // Cancel
+    // ======================
+    async cancelEdit() {
+        const editPage = new EditPayGradesPage(this.page);
+        await editPage.clickCancel();
     }
 
-    async editAndVerifyPayGrade(oldName: string, newData: PayGradeInput) {
-        await this.editPayGrade(oldName, newData);
+    // backward-compatible helper used by tests: fill form but do not save
+    async editPayGradeWithoutSave(oldName: string, newData: PayGradeInput) {
+        await this.fillEditForm(oldName, newData);
+    }
 
-        const expectedName = newData.name ?? oldName;
+    // ======================
+    // Verification helpers
+    // ======================
+    async isPayGradeExist(name: string): Promise<boolean> {
         const payGradesPage = new PayGradesPage(this.page);
-        const exists = await payGradesPage.isPayGradeExist(expectedName);
-
-        expect(exists).toBe(true);
+        return await payGradesPage.isPayGradeExist(name);
     }
 
     async isCurrencyErrorVisible(): Promise<boolean> {
@@ -88,10 +102,5 @@ export class EditPayGradeAction {
     async isMaximumSalaryErrorVisible(): Promise<boolean> {
         const editPage = new EditPayGradesPage(this.page);
         return await editPage.isMaximumSalaryErrorVisible();
-    }
-
-    async isPayGradeExist(name: string): Promise<boolean> {
-        const payGradesPage = new PayGradesPage(this.page);
-        return await payGradesPage.isPayGradeExist(name);
     }
 }

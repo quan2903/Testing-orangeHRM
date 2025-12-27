@@ -2,9 +2,10 @@ import { defineConfig, devices } from '@playwright/test';
 
 const testDirs = [
   { name: 'login-tests', dir: './login/login-test' },
-  { name: 'other-tests', dir: './tests' },
   { name: 'jobtitle-tests', dir: './job/job-titles'},
+  { name: 'pay-grades-tests', dir: './job/pay-grades'},
   { name: 'user-management-tests', dir: './user-management'},
+  { name: 'education-tests', dir: './qualifications/education/add-education' },
   // thêm bao nhiêu folder test cũng được
 ];
 
@@ -31,7 +32,7 @@ export default defineConfig({
   expect: { timeout: 10000 },
   
   use: {
-    baseURL: 'https://opensource-demo.orangehrmlive.com/web/index.php/',
+    baseURL: 'http://localhost:8080/orangehrm-5.7/web/index.php',
     trace: 'on-first-retry',
 
     headless: true,

@@ -1,12 +1,28 @@
 import { test } from '@playwright/test';
 import { AddPayGradesAction } from './add-pay-grades-action';
 import { PayGradeFactory } from '../pay-grade-factory';
+import { LoginPage } from "../../../login/login-page/LoginPage";
+import { JobPage } from '../../job-page';
+
+const ADMIN_USERNAME = process.env.ADMIN_USERNAME 
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD
+
+
+test.beforeEach(async ({ page }) => {
+    const loginpage = new LoginPage(page);
+    await loginpage.goto();
+    await loginpage.login(ADMIN_USERNAME!, ADMIN_PASSWORD!);
+    const jobpage = new JobPage(page);
+    await jobpage.goto();
+    await jobpage.navigateToPayGrades();
+});
 
 test.describe('Add Pay Grades - name validation cases', () => {
   test('Thêm bậc lương mới với tên có 5 ký tự', async ({ page }) => {
     const factory = new PayGradeFactory();
     const action = new AddPayGradesAction(page);
     const pg = factory.createValidNameWith5Characters();
+  
     await action.addAndVerifyPayGrade({ name: pg.name });
   });
 

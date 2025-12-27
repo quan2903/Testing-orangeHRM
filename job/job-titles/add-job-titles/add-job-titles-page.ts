@@ -43,7 +43,7 @@ export class AddJobTitlesPage {
 
             const error = base
                 .filter({ hasText: 'Required' })
-                .or(base.filter({ hasText: 'Should be less than 100 characters' }));
+                .or(base.filter({ hasText: /Required|Should be less than 100 characters/ }));
 
             try {
                 await error.first().waitFor({ state: 'visible', timeout: 5000 });

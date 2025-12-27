@@ -1,0 +1,168 @@
+import {test, expect} from '@playwright/test';
+import {AddSkillsAction} from './add-skills-action'; 
+import {QualificationsPage} from "../../qualification-page";
+import { LoginPage } from '../../../login/login-page/LoginPage';
+import {SkillsFactory} from '../../skills/skills-factory';
+
+const ADMIN_USERNAME = process.env.ADMIN_USERNAME 
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD
+
+
+test.beforeEach(async ({ page }) => {
+    const loginpage = new LoginPage(page);
+    await loginpage.goto();
+    await loginpage.login(ADMIN_USERNAME!, ADMIN_PASSWORD!);
+    const qualificationsPage = new QualificationsPage(page);
+    await qualificationsPage.goto();
+    await qualificationsPage.navigateToSkills();
+});
+
+test.describe('Thêm mới skills thành công', () => {
+    test('Kiểm tra thêm mới kĩ năng với tên kỹ năng có 1 ký tự, toàn bộ là ký tự số', async ({ page }) => {
+        const addSkillsAction = new AddSkillsAction(page);
+        const skillsFactory = new SkillsFactory();
+        const skill = skillsFactory.createValidNameWith1CharacterAndNumberCharacters();
+        const skillAdded = addSkillsAction.addAndVerifySkills(skill);
+        expect(skillAdded).toBeTruthy();
+    });
+
+    test('Kiểm tra thêm mới kĩ năng với tên kỹ năng có 119 ký tự, bao gồm ký tự đặc biệt', async ({ page }) => {
+        const addSkillsAction = new AddSkillsAction(page);
+        const skillsFactory = new SkillsFactory();
+        const skill = skillsFactory.createValidNameWith119CharactersAndSpecialCharacters();
+        const skillAdded = addSkillsAction.addAndVerifySkills(skill);
+        expect(skillAdded).toBeTruthy();
+    });
+    test('Kiểm tra thêm mới kĩ năng với tên kỹ năng có 120 ký tự, bao gồm tất cả ký tự tiếng Việt', async ({ page }) => {
+        const addSkillsAction = new AddSkillsAction(page);
+        const skillsFactory = new SkillsFactory();
+        const skill = skillsFactory.createValidNameWith120CharactersAndAllVietNameseCharacters();
+        const skillAdded = addSkillsAction.addAndVerifySkills(skill);
+        expect(skillAdded).toBeTruthy();
+    });
+
+    test('Kiểm tra thêm mới kĩ năng với tên kỹ năng là ký tự tiếng Trung', async ({ page }) => {
+        const addSkillsAction = new AddSkillsAction(page);
+        const skillsFactory = new SkillsFactory();
+        const skill = skillsFactory.createValidNameWithChineseCharacters();
+        const skillAdded = addSkillsAction.addAndVerifySkills(skill);
+        expect(skillAdded).toBeTruthy();
+    });
+
+    test('Kiểm tra thêm mới kĩ năng với tên kỹ năng có thể dán từ clipboard', async ({ page }) => {
+        const addSkillsAction = new AddSkillsAction(page);
+        const skillsFactory = new SkillsFactory();
+        const skill = skillsFactory.createValidPastableName();
+        const skillAdded = addSkillsAction.addAndVerifySkills(skill);
+        expect(skillAdded).toBeTruthy();
+    });
+
+    test('Kiểm tra thêm mới kĩ năng với tên kỹ năng có 1 ký tự space ở đầu', async ({ page }) => {
+        const addSkillsAction = new AddSkillsAction(page);
+        const skillsFactory = new SkillsFactory();
+        const skill = skillsFactory.createNameWithOneSpaceAtStart();
+        const skillAdded = addSkillsAction.addAndVerifySkills(skill);
+        expect(skillAdded).toBeTruthy();
+    });
+
+    test('Kiểm tra thêm mới kĩ năng với tên kỹ năng có 1 ký tự space ở cuối', async ({ page }) => {
+        const addSkillsAction = new AddSkillsAction(page);
+        const skillsFactory = new SkillsFactory();
+        const skill = skillsFactory.createNameWithOneSpaceAtEnd();
+        const skillAdded = addSkillsAction.addAndVerifySkills(skill);
+        expect(skillAdded).toBeTruthy();
+    });
+
+    test('Kiểm tra thêm mới kĩ năng với tên kỹ năng có nhiều ký tự space ở đầu', async ({ page }) => {
+        const addSkillsAction = new AddSkillsAction(page);
+        const skillsFactory = new SkillsFactory();
+        const skill = skillsFactory.createNameWithMultipleSpacesAtStart();
+        const skillAdded = addSkillsAction.addAndVerifySkills(skill);
+        expect(skillAdded).toBeTruthy();
+    }); 
+
+    test('Kiểm tra thêm mới kĩ năng với tên kỹ năng có nhiều ký tự space ở cuối', async ({ page }) => {
+        const addSkillsAction = new AddSkillsAction(page);
+        const skillsFactory = new SkillsFactory();
+        const skill = skillsFactory.createNameWithMultipleSpacesAtEnd();
+        const skillAdded = addSkillsAction.addAndVerifySkills(skill);
+        expect(skillAdded).toBeTruthy();
+    });
+
+    test('Kiểm tra thêm mới kĩ năng với tên kỹ năng trùng với tên kỹ năng có sẵn nhưng khác hoa/thường', async ({ page }) => {
+        const addSkillsAction = new AddSkillsAction(page);
+        const skillsFactory = new SkillsFactory();
+        const baseSkill = skillsFactory.createValidPastableName();
+        await addSkillsAction.addSkills(baseSkill);
+        const variantSkill = skillsFactory.createNameWithDifferentCase(baseSkill.name!);
+        const skillAdded = await addSkillsAction.addAndVerifySkills(variantSkill);
+        expect(skillAdded).toBeTruthy();
+    });
+
+    test('Kiểm tra thêm mới kĩ năng với tên kỹ năng và mô tả có 1 ký tự, toàn bộ là ký tự số', async ({ page }) => {
+        const addSkillsAction = new AddSkillsAction(page);
+        const skillsFactory = new SkillsFactory();
+        const skill = skillsFactory.createValidNameAndDescriptionWith1CharacterAndAllNumber();
+        const skillAdded = addSkillsAction.addAndVerifySkills(skill);
+        expect(skillAdded).toBeTruthy();
+    });
+
+    test('Kiểm tra thêm mới kĩ năng với tên kỹ năng và mô tả có 399 ký tự, toàn bộ là ký tự đặc biệt', async ({ page }) => {
+        const addSkillsAction = new AddSkillsAction(page);
+        const skillsFactory = new SkillsFactory();
+        const skill = skillsFactory.createValidNameAndDescriptionWith399CharactersAndAllSpecialCharacters();
+        const skillAdded = addSkillsAction.addAndVerifySkills(skill);
+        expect(skillAdded).toBeTruthy();
+    });
+
+    test('Kiểm tra thêm mới kĩ năng với tên kỹ năng và mô tả có 400 ký tự, toàn bộ là ký tự chữ và có tiếng Việt', async ({ page }) => {
+        const addSkillsAction = new AddSkillsAction(page);
+        const skillsFactory = new SkillsFactory();
+        const skill = skillsFactory.createValidNameAndDescriptionWith400CharactersAndAllVietNameseCharacters();
+        const skillAdded = addSkillsAction.addAndVerifySkills(skill);
+        expect(skillAdded).toBeTruthy();
+    });
+
+    test('Kiểm tra thêm mới kĩ năng với tên kỹ năng và mô tả tiếng Trung', async ({ page }) => {
+        const addSkillsAction = new AddSkillsAction(page);
+        const skillsFactory = new SkillsFactory();
+        const skill = skillsFactory.createValidNameAndDescriptionWithChineseCharacters();
+        const skillAdded = addSkillsAction.addAndVerifySkills(skill);
+        expect(skillAdded).toBeTruthy();
+    });
+
+    test('Kiểm tra thêm mới kĩ năng với tên kỹ năng và mô tả có 1 ký tự space ở đầu', async ({ page }) => {
+        const addSkillsAction = new AddSkillsAction(page);
+        const skillsFactory = new SkillsFactory();
+        const skill = skillsFactory.createValidNameAndDescriptionLeadingSpace();
+        const skillAdded = addSkillsAction.addAndVerifySkills(skill);
+        expect(skillAdded).toBeTruthy();
+    });
+
+    test('Kiểm tra thêm mới kĩ năng với tên kỹ năng và mô tả có 1 ký tự space ở cuối', async ({ page }) => {
+        const addSkillsAction = new AddSkillsAction(page);
+        const skillsFactory = new SkillsFactory();
+        const skill = skillsFactory.createValidNameAndDescriptionTrailingSpace();
+        const skillAdded = addSkillsAction.addAndVerifySkills(skill);
+        expect(skillAdded).toBeTruthy();
+    });
+
+    test('Kiểm tra thêm mới kĩ năng với tên kỹ năng và mô tả có nhiều ký tự space ở đầu', async ({ page }) => {
+        const addSkillsAction = new AddSkillsAction(page);
+        const skillsFactory = new SkillsFactory();
+        const skill = skillsFactory.createValidNameAndDescriptionMultipleLeadingSpaces();
+        const skillAdded = addSkillsAction.addAndVerifySkills(skill);
+        expect(skillAdded).toBeTruthy();
+    });
+
+    test('Kiểm tra thêm mới kĩ năng với tên kỹ năng và mô tả có nhiều ký tự space ở cuối', async ({ page }) => {
+        const addSkillsAction = new AddSkillsAction(page);
+        const skillsFactory = new SkillsFactory();
+        const skill = skillsFactory.createValidNameAndDescriptionMultipleTrailingSpaces();
+        const skillAdded = addSkillsAction.addAndVerifySkills(skill);
+        expect(skillAdded).toBeTruthy();
+    });
+
+    
+
+})

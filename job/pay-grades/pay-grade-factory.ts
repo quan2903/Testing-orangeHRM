@@ -11,6 +11,28 @@ export class PayGradeFactory {
     createValidNameWith1Character(): PayGrade {
         return { name: faker.string.alpha({ length: 1 }), ...this.base };
     }
+    createValidNameWith4CharactersAnd1SpaceAtStart(): PayGrade {
+        return { name: ' ' + faker.string.alpha({ length: 4 }), ...this.base };
+    }
+    createValidNameWith4CharactersAnd1SpaceAtEnd(): PayGrade {
+        return { name: faker.string.alpha({ length: 4 }) + ' ', ...this.base };
+    }
+    createValidNameWith4CharactersAndMultipleSpacesAtStart(): PayGrade {
+        return { name: '   ' + faker.string.alpha({ length: 4 }), ...this.base };
+    }
+    createValidNameWith4CharactersAndMultipleSpacesAtEnd(): PayGrade {
+        return { name: faker.string.alpha({ length: 4 }) + '   ', ...this.base };
+    }
+    createValidNameWithSpecialLeadingAndTrailingSpaces(): PayGrade {
+        return { name: '  ' + faker.string.alpha({ length: 6 }) + '  ', ...this.base };
+    }
+    createValidNamewWith4CharactersAndSpaceInMiddle(): PayGrade {
+        return { name: faker.string.alpha({ length: 2 }) + ' ' + faker.string.alpha({ length: 2 }), ...this.base };
+    }
+    createValidNameWith4CharactersAndSpaceInMiddle(): PayGrade {
+        return { name: faker.string.alpha({ length: 2 }) + ' ' + faker.string.alpha({ length: 2 }), ...this.base };
+    }
+
 
     createValidNameWith49Characters(): PayGrade {
         return { name: faker.string.alpha({ length: 49 }), ...this.base };
@@ -28,50 +50,50 @@ export class PayGradeFactory {
         return { name: "Bậc lương", ...this.base };
     }
 
+    createValidNameWithChineseCharacters(): PayGrade {
+        return { name: "工资等级", ...this.base };
+    }
+    
     createValidNameWithSpecialCharacters(): PayGrade {
         return { name: "Salary@Grade#1!", ...this.base };
     }
 
-    createEditWithCurrencyOnly(currency: string): PayGrade {
+    createEditWithCurrencyOnly(): PayGrade {
         return {
             name: faker.string.alpha({ length: 6 }),
-            currency,
             ...this.base,
         };
     }
 
     createEditWithCurrencyAndMinimum(
-        currency: string,
+
         minimumSalary: number
     ): PayGrade {
         return {
             name: faker.string.alpha({ length: 6 }),
-            currency,
             minimumSalary,
             ...this.base,
         };
     }
 
     createEditWithCurrencyAndMaximum(
-        currency: string,
+
         maximumSalary: number
     ): PayGrade {
         return {
             name: faker.string.alpha({ length: 6 }),
-            currency,
             maximumSalary,
             ...this.base,
         };
     }
 
     createEditWithCurrencyAndMinMax(
-        currency: string,
+
         minimumSalary: number,
         maximumSalary: number
     ): PayGrade {
         return {
             name: faker.string.alpha({ length: 6 }),
-            currency,
             minimumSalary,
             maximumSalary,
             ...this.base,
