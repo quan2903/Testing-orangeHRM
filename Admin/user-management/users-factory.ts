@@ -1,11 +1,9 @@
 import { fa, faker } from "@faker-js/faker";
 import { UserType } from "./users-type";
 
-// Lấy ngẫu nhiên vai trò người dùng
 const roles: Array<'Admin' | 'ESS'> = ['Admin', 'ESS'];
 const randomRole = roles[Math.floor(Math.random() * roles.length)];
 
-// Lấy ngẫu nhiên trạng thái người dùng
 const statuses: Array<'Enabled' | 'Disabled'> = ['Enabled', 'Disabled'];
 const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
 

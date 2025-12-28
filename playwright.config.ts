@@ -1,11 +1,11 @@
 import { defineConfig, devices } from '@playwright/test';
 
 const testDirs = [
-  { name: 'login-tests', dir: './login/login-test' },
-  { name: 'jobtitle-tests', dir: './job/job-titles'},
-  { name: 'pay-grades-tests', dir: './job/pay-grades'},
-  { name: 'user-management-tests', dir: './user-management'},
-  { name: 'education-tests', dir: './qualifications/education/add-education' },
+  { name: 'login-tests', dir: './Admin/login/login-test' },
+  { name: 'jobtitle-tests', dir: './Admin/job/job-titles'},
+  { name: 'pay-grades-tests', dir: './Admin/job/pay-grades'},
+  { name: 'user-management-tests', dir: './Admin/user-management'},
+  { name: 'qualification', dir: './Admin/qualifications/' },
   // thêm bao nhiêu folder test cũng được
 ];
 

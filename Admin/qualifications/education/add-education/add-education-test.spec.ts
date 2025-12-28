@@ -1,7 +1,5 @@
 import { test } from '@playwright/test';
-import { AddEducationPage } from './add-education-page';
 import { LoginPage } from "../../../login/login-page/LoginPage";
-import { EducationPage } from '../education-page';
 import { AddEducationAction } from './add-education-action';
 import {QualificationsPage} from "../../qualification-page";
 import { EducationFactory } from '../education-factory';
