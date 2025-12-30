@@ -5,7 +5,7 @@ export class EmploymentListPage {
     constructor(private page: Page) {}
     async goto() {
         const pimPage = new PIMPage(this.page);
-        await pimPage.go();
+        await pimPage.goto();
     }
     async getFirstEmployeeName(): Promise<string> {
         const firstRow = this.page.getByRole('row').nth(1); 
@@ -17,13 +17,15 @@ export class EmploymentListPage {
         return name.trim();
     }
 
-      async clickEditByEmployeeName(employeeName: string) {
-        const row = this.page.getByRole('row', {
-            name: new RegExp(employeeName)
-        });
-
-        await row.waitFor({ state: 'visible', timeout: 5000 });
-        await row.getByRole('button').first().click(); 
+    async clickEditFirstRow() {
+        const firstRow = this.page
+            .locator('.oxd-table-body')
+            .getByRole('row')
+            .first();
+        await this.page.mouse.wheel(0, 200);
+        await firstRow.waitFor({ state: 'visible', timeout: 5000 });
+        await firstRow.locator('button').first().click();
     }
+
     
 }
