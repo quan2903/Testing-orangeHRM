@@ -7,6 +7,7 @@ const testDirs = [
   { name: 'user-management-tests', dir: './Admin/user-management'},
   { name: 'qualification', dir: './Admin/qualifications/' },
   { name: 'PIM tests', dir: './PIM/' },
+  { name: 'Leave', dir: './Leave/' },
   // thêm bao nhiêu folder test cũng được
 ];
 

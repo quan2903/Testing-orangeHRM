@@ -1,71 +1,58 @@
 import { Page } from "playwright-core";
 import { ApplyLeavePage } from "./Apply-Leave-Page";
-import { LeaveType } from "../Leave-Type"
+import { ApplyLeaveType } from "./Assign-Leave-Type";
 
 export class ApplyLeaveAction {
-    constructor(private page: Page) {}
+    private pageUI: ApplyLeavePage;
+
+    constructor(private page: Page) {
+        this.pageUI = new ApplyLeavePage(page);
+    }
+
     async goto() {
-        await new ApplyLeavePage(this.page).goto();
-    }
-    async chooseLeaveType(leavetype: string): Promise<void> {
-        await new ApplyLeavePage(this.page).chooseLeaveType(leavetype);
-    }
-    async fillFromDate(fromdate: string): Promise<void> {
-        await new ApplyLeavePage(this.page).fillFromDate(fromdate);
-    }
-    async fillToDate(todate: string): Promise<void> {
-        await new ApplyLeavePage(this.page).fillToDate(todate);
-    }
-    async chooseDuration(duration: string): Promise<void> {
-        await new ApplyLeavePage(this.page).chooseDuration(duration);
-    }
-    async fillFrom(from: string): Promise<void> {
-        await new ApplyLeavePage(this.page).fillFrom(from);
-    }
-    async fillTo(to: string): Promise<void> {
-        await new ApplyLeavePage(this.page).fillTo(to);
-    }
-    async fillComment(comment: string): Promise<void> {
-        await new ApplyLeavePage(this.page).fillComment(comment);
+        await this.pageUI.goto();
     }
 
-    async saveChanges(): Promise<void> {
-        await new ApplyLeaveAction(this.page).saveChanges();
+    async chooseLeaveType(leavetype?: string) {
+        await this.pageUI.chooseLeaveType(leavetype);
     }
-    
-    async updatePersonalDetails(personalDetails: PersonalDetailsType) {
-        await this.fillFirstName(personalDetails.firstName);
-        await this.fillMiddleName(personalDetails.middleName);
-        await this.fillLastName(personalDetails.lastName);
-        await this.fillEmployeeId(personalDetails.employeeId);
-        await this.fillOtherId(personalDetails.otherId);
-        await this.fillLicenseNumber(personalDetails.licenseNumber);
-        await this.fillLicenseExpiryDate(personalDetails.licenseExpiryDate);
-        await this.fillDateOfBirth(personalDetails.dateOfBirth);
-        await this.chooseRandomNationality(personalDetails.nationality);
+
+    async fillFromDate(fromdate?: string) {
+        await this.pageUI.fillFromDate(fromdate);
+    }
+
+    async fillToDate(todate?: string) {
+        await this.pageUI.fillToDate(todate);
+    }
+
+    async chooseDuration(duration?: string) {
+        await this.pageUI.chooseDuration(duration);
+    }
+
+    async fillFrom(from?: string) {
+        await this.pageUI.fillFrom(from);
+    }
+
+    async fillTo(to?: string) {
+        await this.pageUI.fillTo(to);
+    }
+
+    async fillComment(comment?: string) {
+        await this.pageUI.fillComment(comment);
+    }
+
+    async saveChanges() {
+        await this.pageUI.saveChanges();
+    }
+
+    async updatePersonalDetails(data: ApplyLeaveType) {
+        await this.chooseLeaveType(data.leaveType);
+        await this.fillFromDate(data.fromDate);
+        await this.fillToDate(data.toDate);
+        await this.chooseDuration(data.duration);
+        await this.fillFrom(data.fromTime);
+        await this.fillTo(data.toTime);
+        await this.fillComment(data.comment);
         await this.saveChanges();
-    }
-
-    async isFirstNameErrorVisible(): Promise<boolean> {
-        return await new ApplyLeaveAction(this.page).isFirstNameErrorVisible();
-    }
-    async isMiddleNameErrorVisible(): Promise<boolean> {
-        return await new ApplyLeaveAction(this.page).isMiddleNameErrorVisible();
-    }
-    async isLastNameErrorVisible(): Promise<boolean> {
-        return await new ApplyLeaveAction(this.page).isLastNameErrorVisible();
-    }
-    async isEmployeeIdErrorVisible(): Promise<boolean> {
-        return await new ApplyLeaveAction(this.page).isEmployeeIdErrorVisible();
-    }
-    async isLicenseNumberErrorVisible(): Promise<boolean> {
-        return await new ApplyLeaveAction(this.page).isLicenseNumberErrorVisible();
-    }
-    async isLicenseExpiryDateErrorVisible(): Promise<boolean> {
-        return await new ApplyLeaveAction(this.page).isLicenseExpiryDateErrorVisible();
-    }
-
-    async isDateOfBirthErrorVisible(): Promise<boolean> {
-        return await new ApplyLeaveAction(this.page).isDateOfBirthErrorVisible();
     }
 }
