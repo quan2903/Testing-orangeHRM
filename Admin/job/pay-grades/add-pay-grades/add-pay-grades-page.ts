@@ -1,14 +1,12 @@
 import { Page } from "playwright-core";
 import { PayGradesPage } from "../pay-grades-page";
 
-// filepath: c:\Users\ADMIN\Documents\Đồ án tốt nghiệp\Testing-orangeHRM\job\pay-grades\add-pay-grades\add-pay-grades-page.ts
-
 export class AddPayGradesPage {
     constructor(public page: Page) {}
 
     async goto() {
-        const addPayGradesPage = new PayGradesPage(this.page);
-        await addPayGradesPage.clickAddButton();
+        const payGradesPage = new PayGradesPage(this.page);
+        await payGradesPage.clickAddButton();
     }
 
     async fillName(name: string) {
@@ -36,43 +34,82 @@ export class AddPayGradesPage {
         await this.page.getByRole('button', { name: 'Cancel' }).click();
     }
 
-    async isNameErrorVisible(): Promise<boolean> {
-        const base = this.page.locator(
-            'span.oxd-text.oxd-text--span.oxd-input-field-error-message'
-        );
-
-        const error = base
-            .filter({ hasText: 'Required' })
-            .or(base.filter({ hasText: 'Should be less than 50 characters' }));
+    async isErrorVisible(field: 'name' | 'salary'): Promise<boolean> {
+        const base = this.page.locator('span.oxd-text.oxd-text--span.oxd-input-field-error-message');
+        let error;
+        switch (field) {
+            case 'name':
+                error = base.filter({ hasText: /Required|Should not exceed 50 characters|Already exists/ });
+                break;
+            case 'salary':
+                error = base.filter({ hasText: /Invalid|Minimum salary must be less than maximum/ });
+                break;
+            default:
+                return false;
+        }
 
         try {
-            await error.first().waitFor({ state: 'visible', timeout: 5000 });
+            await error.first().waitFor({ state: 'visible', timeout: 3000 });
             return true;
         } catch {
             return false;
         }
     }
 
+    async isNameErrorVisible() {
+        return this.isErrorVisible('name');
+    }
 
+    async isSalaryErrorVisible() {
+        return this.isErrorVisible('salary');
+    }
 
-    async isPayGradeExist(name: string): Promise<boolean> {
+    async isPayGradeExist(name?: string): Promise<boolean> {
+        if (!name) return false;
         try {
-            const el = this.page.locator(`text="${name}"`);
-            await el.first().waitFor({ state: 'visible', timeout: 3000 });
-            return await el.count() > 0;
-        } catch (e) {
+            const rows = this.page.locator('.oxd-table-card');
+            const count = await rows.count();
+            for (let i = 0; i < count; i++) {
+                const row = rows.nth(i);
+                await row.scrollIntoViewIfNeeded();
+                const text = await row.innerText();
+                if (text.includes(name)) {
+                    return true;
+                }
+            }
+            return false;
+        } catch {
             return false;
         }
     }
 
-    async fillPayGradeDetails(
-        name: string,
-        description: string,
-        note: string,
-        file: { name: string; mimeType: string; buffer: Buffer } | null
-    ) {
-        await this.fillName(name);
-        await this.page.waitForTimeout(500);
+    async isGlobalErrorNotificationVisible(pattern: string | RegExp = /Error|Invalid|Failed|Unable|Not allowed|Already exists/): Promise<boolean> {
+        const toast = this.page.locator('.oxd-toast-content, .oxd-alert-content, .oxd-toast, .oxd-alert').filter({ hasText: pattern });
+        try {
+            await toast.first().waitFor({ state: 'visible', timeout: 5000 });
+            return true;
+        } catch {
+            return false;
+        }
+    }
+
+    async copyFirstPayGrade(): Promise<string | null> {
+        try {
+            const firstRow = this.page.locator('.oxd-table-card').first();
+            await firstRow.scrollIntoViewIfNeeded();
+            const text = await firstRow.innerText();
+            const lines = text.split('\n');
+            return lines[0] ?? null;
+        } catch {
+            return null;
+        }
+    }
+
+    async fillPayGradeDetails(name: string, currency?: string, minimumSalary?: number, maximumSalary?: number) {
+        if (name) await this.fillName(name);
+        if (currency) await this.fillCurrency(currency);
+        if (minimumSalary !== undefined) await this.fillMinimumSalary(minimumSalary);
+        if (maximumSalary !== undefined) await this.fillMaximumSalary(maximumSalary);
         await this.clickSaveButton();
     }
 }

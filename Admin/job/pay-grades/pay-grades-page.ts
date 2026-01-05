@@ -36,28 +36,9 @@ export class PayGradesPage {
             }
         }
 
-        // If still not found, provide a helpful error for debugging (include current HTML snapshot hint)
         throw new Error('No Add buttons found on Pay Grades page');
     }
     
-async isPayGradeExist(expectedName: string): Promise<boolean> {
-    const nameInput = this.page
-        .locator('div.oxd-input-group')
-        .filter({ has: this.page.locator('label', { hasText: 'Name' }) })
-        .locator('input.oxd-input');
-
-    try {
-        await nameInput.waitFor({ state: 'visible', timeout: 5000 });
-        const value = (await nameInput.inputValue()).trim();
-        return value === expectedName;
-    } catch {
-        return false;
-    }
-}
-
-
-
-
     async clickEditButtonAndGetOldName(): Promise<string> {
         // 1️⃣ Lấy dòng đầu tiên trong bảng
         const firstRow = this.page.locator('.oxd-table-card').first();
@@ -77,9 +58,7 @@ async isPayGradeExist(expectedName: string): Promise<boolean> {
         return oldName;
     }
 
-    /**
-     * Lấy name của dòng đầu tiên (dùng verify sau khi edit)
-     */
+
     async getFirstRowName(): Promise<string> {
         const firstRow = this.page.locator('.oxd-table-card').first();
         await firstRow.waitFor({ state: 'visible', timeout: 10000 });
@@ -94,17 +73,4 @@ async isPayGradeExist(expectedName: string): Promise<boolean> {
         await payGrade.locator('button:has(i.icon-trash)').click();
     }
 
-    /**
-     * Check if name error message is visible.
-     */
-    async isNameErrorVisible(): Promise<boolean> {
-        const error = this.page.locator('span.oxd-text.oxd-text--span.oxd-input-field-error-message')
-            .filter({ hasText: /Required|Should be less than 50 characters/ });
-        try {
-            await error.first().waitFor({ state: 'visible', timeout: 5000 });
-            return true;
-        } catch {
-            return false;
-        }
-    }
 }

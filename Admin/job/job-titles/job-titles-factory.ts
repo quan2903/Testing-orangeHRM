@@ -1,10 +1,10 @@
 import { fa, faker } from "@faker-js/faker";
-import JobTitle from "./job-titles-type";
+import {JobTitleType} from "./job-titles-type";
 
 export class JobTitleFactory {
-  constructor(private base?: Partial<JobTitle>) {}
+  constructor(private base?: Partial<JobTitleType>) {}
 
-  createValidNameWith1Characters(): JobTitle {
+  createValidNameWith1Characters(): JobTitleType {
     return {
       name: faker.string.alpha({ length: 1 }),
       description: faker.lorem.sentence(),
@@ -13,7 +13,7 @@ export class JobTitleFactory {
     };
   }
   
-  createValidWithMinimalFields(): JobTitle {
+  createValidWithMinimalFields(): JobTitleType{
     return {
       name: faker.person.jobTitle(),
       description: "",
@@ -22,7 +22,7 @@ export class JobTitleFactory {
     };
   }
 
-  createNameAndDescriptionWith1Characters(): JobTitle {
+  createNameAndDescriptionWith1Characters(): JobTitleType{
     return {
       name: faker.string.alpha({ length: 1 }),
       description: faker.string.alpha({ length: 1 }),
@@ -31,7 +31,7 @@ export class JobTitleFactory {
     };
   }
 
-  createNameAndDescriptionWith399Characters(): JobTitle {
+  createNameAndDescriptionWith399Characters(): JobTitleType{
     return {
       name: faker.string.alpha({ length: 399 }),
       description: faker.string.alpha({ length: 399 }),
@@ -40,7 +40,7 @@ export class JobTitleFactory {
     };
   }
 
-  createNameAndDescriptionWith400Characters(): JobTitle {
+  createNameAndDescriptionWith400Characters(): JobTitleType{
     return {
       name: faker.string.alpha({ length: 400 }),
       description: faker.string.alpha({ length: 400 }),
@@ -48,12 +48,8 @@ export class JobTitleFactory {
       file: null,
     };
   }
-  createFakeFile(name: string, mimeType: string, sizeInMB: number) {
-  const sizeInBytes = sizeInMB * 1024 * 1024; // MB → Bytes
-  const buffer = Buffer.alloc(sizeInBytes, "a"); // tạo buffer với ký tự 'a'
-  return { name, mimeType, buffer };
-}
-  createValidNameWith99Characters(): JobTitle {
+
+  createValidNameWith99Characters(): JobTitleType{
     return {
       name: faker.string.alpha({ length: 99 }),
       description: "",
@@ -62,7 +58,7 @@ export class JobTitleFactory {
     };
   }
 
-  createValidNameWith100Characters(): JobTitle {
+  createValidNameWith100Characters(): JobTitleType{
     return {
       name: faker.string.alpha({ length: 100 }),
       description:"",
@@ -71,7 +67,7 @@ export class JobTitleFactory {
     };
   }
 
-  createValidNameWithSpecialCharacters(): JobTitle {
+  createValidNameWithSpecialCharacters(): JobTitleType{
     return {
       name: "!@#$%^&*()_+{}|:\"<>?-=[]\\;',./`~",
       description: "",
@@ -80,7 +76,7 @@ export class JobTitleFactory {
     };
   }
 
-  createValidNameWithNumberCharacters(): JobTitle {
+  createValidNameWithNumberCharacters(): JobTitleType{
     return {
       name: "123456" + faker.person.jobTitle() + "7890",
       description: "",
@@ -89,7 +85,7 @@ export class JobTitleFactory {
     };
   }
 
-  createValidNameWithVietnameseCharacters(): JobTitle {
+  createValidNameWithVietnameseCharacters(): JobTitleType{
     return {
       name: "Công việc phát triển phần mềm" + faker.person.jobTitle(),
       description:"",
@@ -98,7 +94,7 @@ export class JobTitleFactory {
     };
   }
 
-  createValidNameWithChineseCharacters(): JobTitle {
+  createValidNameWithChineseCharacters(): JobTitleType{
     return {
       name: "软件开发职位" + faker.person.jobTitle(),
       description: "",
@@ -107,7 +103,7 @@ export class JobTitleFactory {
     };
   }
 
-  createValidNameSameWithExistingJobDifferentUppercase(existingJob: string): JobTitle {
+  createValidNameSameWithExistingJobDifferentUppercase(existingJob: string): JobTitleType{
     return {
       name: existingJob.toUpperCase(),
       description: "",
@@ -116,7 +112,7 @@ export class JobTitleFactory {
     };
   }
 
-  createValidDescriptionWith1Characters(): JobTitle {
+  createValidDescriptionWith1Characters(): JobTitleType{
     return {
       name: faker.person.jobTitle(),
       description: faker.string.alpha({ length: 1 }),
@@ -125,7 +121,7 @@ export class JobTitleFactory {
     };
   }
 
-  createValidDescriptionWith399Characters(): JobTitle {
+  createValidDescriptionWith399Characters(): JobTitleType{
     return {
       name: faker.person.jobTitle(),
       description: faker.string.alpha({ length: 399 }),
@@ -134,7 +130,7 @@ export class JobTitleFactory {
     };
   }
 
-  createValidDescriptionWith400Characters(): JobTitle {
+  createValidDescriptionWith400Characters(): JobTitleType{
     return {
       name: faker.person.jobTitle(),
       description: faker.string.alpha({ length: 400 }),
@@ -143,7 +139,7 @@ export class JobTitleFactory {
     };
   }
 
-  createValidDescriptionWithSpecialCharacters(): JobTitle {
+  createValidDescriptionWithSpecialCharacters(): JobTitleType{
     return {
       name: faker.person.jobTitle(),
       description: "!@#$%^&*()_+{}|:\"<>?-=[]\\;',./`~",
@@ -152,16 +148,9 @@ export class JobTitleFactory {
     };
   }
 
-  createFileUnder1MB(): JobTitle {
-    return {
-      name: faker.person.jobTitle(),
-      description: "",
-      note: "",
-      file: this.createFakeFile("largefile.txt", "text/plain", 0.99),
-    };
-  }
 
-  createValidNameByPastingText(): JobTitle {
+
+  createValidNameByPastingText(): JobTitleType{
     return {
       name: faker.lorem.paragraphs(2),
       description: faker.lorem.sentence(),
@@ -170,7 +159,7 @@ export class JobTitleFactory {
     };
   }
 
-  createValidNameWith1SpaceCharacterAtTheBeginning(): JobTitle{
+  createValidNameWith1SpaceCharacterAtTheBeginning(): JobTitleType{
     return {
       name: " " + faker.person.jobTitle() ,
       description: faker.lorem.sentence(),
@@ -179,7 +168,7 @@ export class JobTitleFactory {
     };
   }
 
-  createValidNameWith1SpaceCharacterAtTheEnd(): JobTitle{
+  createValidNameWith1SpaceCharacterAtTheEnd(): JobTitleType{
     return {
       name: faker.person.jobTitle() + " ",
       description: faker.lorem.sentence(),
@@ -188,7 +177,7 @@ export class JobTitleFactory {
     };
   }
 
-  createValidNameWithLeadingSpaces(): JobTitle{
+  createValidNameWithLeadingSpaces(): JobTitleType{
     return {
       name: "     " + faker.person.jobTitle() ,
       description: faker.lorem.sentence(),
@@ -197,7 +186,7 @@ export class JobTitleFactory {
     };
   }
 
-  createValidNameWithTrailingSpaces(): JobTitle{
+  createValidNameWithTrailingSpaces(): JobTitleType{
     return {
       name: faker.person.jobTitle() + "     ",
       description: faker.lorem.sentence(),
@@ -206,7 +195,7 @@ export class JobTitleFactory {
     };
   }
 
-  createValidNameWithMiddleSpaces(): JobTitle{
+  createValidNameWithMiddleSpaces(): JobTitleType{
     return {
       name: "Senior     Developer",
       description: faker.lorem.sentence(),
@@ -215,7 +204,7 @@ export class JobTitleFactory {
     };
   }
 
-  createNameAndNoteWith399Characters(): JobTitle {
+  createNameAndNoteWith399Characters(): JobTitleType{
     return {
       name: faker.person.jobTitle(),
       description: "",
@@ -224,7 +213,7 @@ export class JobTitleFactory {
     };
   }
 
-  createNameAndNoteWith400Characters(): JobTitle {
+  createNameAndNoteWith400Characters(): JobTitleType{
     return {
       name: faker.person.jobTitle(),
       description: "",
@@ -233,7 +222,7 @@ export class JobTitleFactory {
     };
   }
 
-  createNameAndNoteWithSpecialCharacters(): JobTitle {
+  createNameAndNoteWithSpecialCharacters(): JobTitleType{
     return {
       name: faker.person.jobTitle(),
       description: "",
@@ -242,16 +231,8 @@ export class JobTitleFactory {
     };
   }
 
-  createAllFieldsFilled(): JobTitle {
-    return {
-      name: faker.person.jobTitle(),
-      description: faker.lorem.paragraph(),
-      note: faker.lorem.sentences(2),
-      file: this.createFakeFile('sample.txt', 'text/plain', 0.1),
-    };
-  }
 
-  createValidNoteByPastingText(): JobTitle {
+  createValidNoteByPastingText(): JobTitleType{
     return {
       name: faker.person.jobTitle(),
       description: faker.lorem.sentence(),
@@ -260,7 +241,7 @@ export class JobTitleFactory {
     };
   }
 
-  createValidDescriptionByPastingText(): JobTitle {
+  createValidDescriptionByPastingText(): JobTitleType{
     return {
       name: faker.person.jobTitle(),
       description: faker.lorem.paragraphs(2),
@@ -269,7 +250,7 @@ export class JobTitleFactory {
     };
   }
 
-  createInvalidEmptyAllFields(): JobTitle {
+  createInvalidEmptyAllFields(): JobTitleType{
     return {
       name: "",
       description: "",
@@ -278,7 +259,7 @@ export class JobTitleFactory {
     };
   }
 
-  createInvalidEmptyName(): JobTitle {
+  createInvalidEmptyName(): JobTitleType{
     return {
       name: "",
       description: faker.lorem.sentence(),
@@ -287,7 +268,7 @@ export class JobTitleFactory {
     };
   }
 
-  createInvalidNameExisting(existingJob: string): JobTitle {
+  createInvalidNameExisting(existingJob: string): JobTitleType{
     return {
       name: existingJob,
       description: faker.lorem.sentence(),
@@ -296,7 +277,7 @@ export class JobTitleFactory {
     };
   }
 
-  createInvalidNameWithOnlySpaces(): JobTitle {
+  createInvalidNameWithOnlySpaces(): JobTitleType{
     return {
       name: "     ",
       description: faker.lorem.sentence(),
@@ -305,7 +286,7 @@ export class JobTitleFactory {
     };
   }
 
-  createInvalidNameWith101Characters(): JobTitle {
+  createInvalidNameWith101Characters(): JobTitleType{
     return {
       name: faker.string.alpha({ length: 101 }),
       description: faker.lorem.sentence(),
@@ -314,7 +295,7 @@ export class JobTitleFactory {
     };
   }
 
-  createInvalidNameWith255Characters(): JobTitle {
+  createInvalidNameWith255Characters(): JobTitleType{
     return {
       name: faker.string.alpha({ length: 255 }),
       description: faker.lorem.sentence(),
@@ -323,7 +304,7 @@ export class JobTitleFactory {
     };
   }
 
-  createInvalidNameWithEmoji(): JobTitle {
+  createInvalidNameWithEmoji(): JobTitleType{
     return {
       name: "Senior Developer 😊🚀💼",
       description: faker.lorem.sentence(),
@@ -332,7 +313,7 @@ export class JobTitleFactory {
     };
   }
 
-  createInvalidDescriptionWith401Characters(): JobTitle {
+  createInvalidDescriptionWith401Characters(): JobTitleType{
     return {
       name: faker.person.jobTitle(),
       description: faker.lorem.sentence(401),
@@ -341,7 +322,7 @@ export class JobTitleFactory {
     };
   }
 
-  createInvalidDescriptionWith600Characters(): JobTitle {
+  createInvalidDescriptionWith600Characters(): JobTitleType{
     return {
       name: faker.person.jobTitle(),
       description: faker.lorem.sentence(600),
@@ -350,34 +331,10 @@ export class JobTitleFactory {
     };
   }
 
-  createInvalidFile1_01MB(): JobTitle {
-    return {
-      name: faker.person.jobTitle(),
-      description: faker.lorem.sentence(),
-      note: faker.lorem.words(5),
-      file: this.createFakeFile("largefile.txt", "text/plain", 1.01),
-    };
-  }
 
-  createInvalidFile10MB(): JobTitle {
-    return {
-      name: faker.person.jobTitle(),
-      description: faker.lorem.sentence(),
-      note: faker.lorem.words(5),
-      file: this.createFakeFile("largefile.txt", "text/plain", 10),
-    };
-  }
 
-  createInvalidFileExecutable(): JobTitle {
-    return {
-      name: faker.person.jobTitle(),
-      description: faker.lorem.sentence(),
-      note: faker.lorem.words(5),
-      file: this.createFakeFile("malware.exe", "application/x-msdownload", 1),
-    };
-  }
 
-  createInvalidNoteWithEmoji(): JobTitle {
+  createInvalidNoteWithEmoji(): JobTitleType{
     return {
       name: faker.person.jobTitle(),
       description: faker.lorem.sentence(),
@@ -386,7 +343,7 @@ export class JobTitleFactory {
     };
   }
 
-  createInvalidNoteWith401Characters(): JobTitle {
+  createInvalidNoteWith401Characters(): JobTitleType{
     return {
       name: faker.person.jobTitle(),
       description: faker.lorem.sentence(),
@@ -395,7 +352,7 @@ export class JobTitleFactory {
     };
   }
 
-  createInvalidNoteWith600Characters(): JobTitle {
+  createInvalidNoteWith600Characters(): JobTitleType{
     return {
       name: faker.person.jobTitle(),
       description: faker.lorem.sentence(),
@@ -404,7 +361,7 @@ export class JobTitleFactory {
     };
   }
 
-  createInvalidNameExistingWith1SpaceCharacterAtTheBeginning(existingJob: string): JobTitle {
+  createInvalidNameExistingWith1SpaceCharacterAtTheBeginning(existingJob: string): JobTitleType{
     return {
       name:  " " + existingJob,
       description: faker.lorem.sentence(),
@@ -412,7 +369,7 @@ export class JobTitleFactory {
       file: null,
     };
   }
-  createInvalidNameExistingWith1SpaceCharacterAtTheEnd(existingJob: string): JobTitle {
+  createInvalidNameExistingWith1SpaceCharacterAtTheEnd(existingJob: string): JobTitleType{
     return {
       name: existingJob + " ",
       description: faker.lorem.sentence(),
@@ -420,7 +377,7 @@ export class JobTitleFactory {
       file: null,
     };
   }
-  createInvalidNameExistingWithLeadingSpaces(existingJob: string): JobTitle {
+  createInvalidNameExistingWithLeadingSpaces(existingJob: string): JobTitleType{
     return {
       name: "     " + existingJob,
       description: faker.lorem.sentence(),
@@ -428,7 +385,7 @@ export class JobTitleFactory {
       file: null,
     };
   }
-    createInvalidNameExistingWithTrailingSpaces(existingJob: string): JobTitle {
+    createInvalidNameExistingWithTrailingSpaces(existingJob: string): JobTitleType{
       return {
         name: existingJob + "     ",
         description: faker.lorem.sentence(),

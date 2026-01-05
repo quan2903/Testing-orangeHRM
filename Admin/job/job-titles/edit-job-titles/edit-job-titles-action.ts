@@ -1,22 +1,47 @@
-import { JobTitlesPage } from "../job-title-page";
-import JobTitle from "../job-titles-type";
+import { Page } from "@playwright/test";
 import { EditJobTitle } from "./edit-job-titles-page";
-import { Page, expect} from "@playwright/test";
 
 export class EditJobTitleAction {
-    constructor (private page: Page){
+  private editJobTitle: EditJobTitle;
 
-    }
-    async goto(){
-        const editjobtitle = new EditJobTitle(this.page);
-        await editjobtitle.goto();
-    }
-    async editandverify(name: string, description: string, note: string, file: { name: string; mimeType: string; buffer: Buffer } | null){
-       const editjobtitle = new EditJobTitle(this.page);
-       editjobtitle.fillJobTitleDetails(name, description, note, file); 
-       const jobtitle = new JobTitlesPage(this.page);
-       const exist = jobtitle.isJobTitlesexist(name);
-       expect (exist).toBe(true);   
-    }
-        
+  constructor(private page: Page) {
+    this.editJobTitle = new EditJobTitle(page);
+  }
+
+  async goto() {
+    await this.editJobTitle.goto();
+  }
+
+  async editAndVerify(
+    jobTitle?: string,
+    jobDescription?: string,
+    note?: string,
+    file?: { name: string; mimeType: string; buffer: Buffer } | null
+  ) {
+    await this.editJobTitle.fillJobTitleDetails(jobTitle, jobDescription, note, file);
+  }
+
+  async isJobTitleErrorVisible(): Promise<boolean> {
+    return this.editJobTitle.isJobTitleErrorVisible();
+  }
+
+  async isJobDescriptionErrorVisible(): Promise<boolean> {
+    return this.editJobTitle.isJobDescriptionErrorVisible();
+  }
+
+  async isJobNoteErrorVisible(): Promise<boolean> {
+    return this.editJobTitle.isJobNoteErrorVisible();
+  }
+
+  async isAttachmentErrorVisible(): Promise<boolean> {
+    return this.editJobTitle.isAttachmentErrorVisible();
+  }
+
+  async isGlobalErrorNotificationVisible(pattern?: string | RegExp): Promise<boolean> {
+    return this.editJobTitle.isGlobalErrorNotificationVisible(pattern);
+  }
+
+  async isEditSuccessful(): Promise<boolean> {
+    return this.editJobTitle.isEditSuccessful();
+  }
 }
