@@ -22,7 +22,7 @@ test.describe('Add Pay Grades - name validation cases', () => {
     const factory = new PayGradeFactory();
     const action = new AddPayGradesAction(page);
     const pg = factory.createValidNameWith5Characters();
-    await action.addPayGradeAndSave(pg)
+    await action.addPayGradeWithNameOnly(pg)
     expect (action.isPayGradeExist(pg.name)).toBeTruthy();
   });
 
@@ -30,90 +30,103 @@ test.describe('Add Pay Grades - name validation cases', () => {
     const factory = new PayGradeFactory();
     const action = new AddPayGradesAction(page);
     const pg = factory.createValidNameWith1Character();
-    await action.addPayGradeAndSave(pg)
+    await action.addPayGradeWithNameOnly(pg)
+    expect (action.isPayGradeExist(pg.name)).toBeTruthy();
   });
 
   test('Thêm bậc lương mới với tên có 49 ký tự', async ({ page }) => {
     const factory = new PayGradeFactory();
     const action = new AddPayGradesAction(page);
     const pg = factory.createValidNameWith49Characters();
-    await action.addPayGradeAndSave(pg)
+    await action.addPayGradeWithNameOnly(pg)
+    expect (action.isPayGradeExist(pg.name)).toBeTruthy();
   });
 
   test('Thêm bậc lương mới với tên có 50 ký tự', async ({ page }) => {
     const factory = new PayGradeFactory();
     const action = new AddPayGradesAction(page);
     const pg = factory.createValidNameWith50Characters();
-    await action.addPayGradeAndSave(pg)
+    await action.addPayGradeWithNameOnly(pg)
+     expect (action.isPayGradeExist(pg.name)).toBeTruthy();
   });
 
   test('Thêm bậc lương mới với tên paste từ nguồn khác', async ({ page }) => {
     const factory = new PayGradeFactory();
     const action = new AddPayGradesAction(page);
     const pg = factory.createValidNameByPastingText();
-    await action.addPayGradeAndSave(pg)
+    await action.addPayGradeWithNameOnly(pg)
+     expect (action.isPayGradeExist(pg.name)).toBeTruthy();
   });
 
   test('Thêm bậc lương mới với tên 4 ký tự + 1 space ở đầu', async ({ page }) => {
     const factory = new PayGradeFactory();
     const action = new AddPayGradesAction(page);
     const pg = factory.createValidNameWith4CharactersAnd1SpaceAtStart();
-    await action.addPayGradeAndSave(pg)
+    await action.addPayGradeWithNameOnly(pg)
+   expect (action.isPayGradeExist(pg.name)).toBeTruthy();
   });
 
   test('Thêm bậc lương mới với tên 4 ký tự + 1 space ở cuối', async ({ page }) => {
     const factory = new PayGradeFactory();
     const action = new AddPayGradesAction(page);
     const pg = factory.createValidNameWith4CharactersAnd1SpaceAtEnd();
-    await action.addPayGradeAndSave(pg)
+    await action.addPayGradeWithNameOnly(pg)
+   expect (action.isPayGradeExist(pg.name)).toBeTruthy();
   });
 
   test('Thêm bậc lương mới với tên 4 ký tự + nhiều space ở đầu', async ({ page }) => {
     const factory = new PayGradeFactory();
     const action = new AddPayGradesAction(page);
     const pg = factory.createValidNameWith4CharactersAndMultipleSpacesAtStart();
-    await action.addPayGradeAndSave(pg)
+    await action.addPayGradeWithNameOnly(pg)
+   expect (action.isPayGradeExist(pg.name)).toBeTruthy();
   });
 
   test('Thêm bậc lương mới với tên 4 ký tự + nhiều space ở cuối', async ({ page }) => {
     const factory = new PayGradeFactory();
     const action = new AddPayGradesAction(page);
     const pg = factory.createValidNameWith4CharactersAndMultipleSpacesAtEnd();
-    await action.addPayGradeAndSave(pg)
+    await action.addPayGradeWithNameOnly(pg)
+   expect (action.isPayGradeExist(pg.name)).toBeTruthy();
   });
 
   test('Thêm bậc lương mới với tên 4 ký tự + space ở giữa', async ({ page }) => {
     const factory = new PayGradeFactory();
     const action = new AddPayGradesAction(page);
     const pg = factory.createValidNameWith4CharactersAndSpaceInMiddle();
-    await action.addPayGradeAndSave(pg)
+    await action.addPayGradeWithNameOnly(pg)
+     expect (action.isPayGradeExist(pg.name)).toBeTruthy();
   });
 
   test('Thêm bậc lương mới với tên tiếng Việt', async ({ page }) => {
     const factory = new PayGradeFactory();
     const action = new AddPayGradesAction(page);
     const pg = factory.createValidNameWithVietnameseCharacters();
-    await action.addPayGradeAndSave(pg)
+    await action.addPayGradeWithNameOnly(pg)
+     expect (action.isPayGradeExist(pg.name)).toBeTruthy();
   });
 
   test('Thêm bậc lương mới với tên tiếng Trung', async ({ page }) => {
     const factory = new PayGradeFactory();
     const action = new AddPayGradesAction(page);
     const pg = factory.createValidNameWithChineseCharacters();
-    await action.addPayGradeAndSave(pg)
+    await action.addPayGradeWithNameOnly(pg)
+     expect (action.isPayGradeExist(pg.name)).toBeTruthy();
   });
 
   test('Thêm bậc lương mới với tên có ký tự đặc biệt', async ({ page }) => {
     const factory = new PayGradeFactory();
     const action = new AddPayGradesAction(page);
     const pg = factory.createValidNameWithSpecialCharacters();
-    await action.addPayGradeAndSave(pg)
+    await action.addPayGradeWithNameOnly(pg)
+     expect (action.isPayGradeExist(pg.name)).toBeTruthy();
   });
   test('Thêm bậc lương mới với tên có ký tự số', async ({ page }) => {
     const factory = new PayGradeFactory();
     const action = new AddPayGradesAction(page);
     const pg = factory.createValidNameWithNumbers();
-    await action.addPayGradeAndSave(pg)
+    await action.addPayGradeWithNameOnly(pg)
+     expect (action.isPayGradeExist(pg.name)).toBeTruthy();
   });
 
 });

@@ -39,23 +39,18 @@ export class PayGradesPage {
         throw new Error('No Add buttons found on Pay Grades page');
     }
     
-    async clickEditButtonAndGetOldName(): Promise<string> {
-        // 1️⃣ Lấy dòng đầu tiên trong bảng
-        const firstRow = this.page.locator('.oxd-table-card').first();
-        await firstRow.waitFor({ state: 'visible', timeout: 10000 });
-
-        // 2️⃣ Lấy oldName từ cột Name
-        // (OrangeHRM: cột đầu tiên là Name)
-        const nameCell = firstRow.locator('.oxd-table-cell').first();
-        const oldName = (await nameCell.innerText()).trim();
-
-        // 3️⃣ Click nút Edit (icon bút chì) trong cùng dòng
-
-        await this.page.getByRole('row', { name: oldName }).getByRole('button').nth(1).click();
-
-        await this.page.getByRole('button', { name: '' }).first().click();
-        // 4️⃣ Trả oldName để dùng cho verify
-        return oldName;
+    async clickEditButtonAndGetOldName(name: string) {
+        const rows = this.page.locator('.oxd-table-card');
+        const count = await rows.count();
+        for (let i = 0; i < count; i++) {
+            const row = rows.nth(i);
+            const text = await row.innerText();
+            if (text.includes(name)) {
+                await row.getByRole('button', { name: 'Edit' }).click();
+                return name;
+            }
+        }
+        throw new Error(`Pay grade "${name}" not found`);
     }
 
 
@@ -71,6 +66,24 @@ export class PayGradesPage {
         const payGrade = this.page.locator(`.oxd-table-card >> text=${name}`);
         await payGrade.first().waitFor({ state: 'visible', timeout: 10000 });
         await payGrade.locator('button:has(i.icon-trash)').click();
+    }
+        async isPayGradeExist(name?: string): Promise<boolean> {
+        if (!name) return false;
+        try {
+            const rows = this.page.locator('.oxd-table-card');
+            const count = await rows.count();
+            for (let i = 0; i < count; i++) {
+                const row = rows.nth(i);
+                await row.scrollIntoViewIfNeeded();
+                const text = await row.innerText();
+                if (text.includes(name)) {
+                    return true;
+                }
+            }
+            return false;
+        } catch {
+            return false;
+        }
     }
 
 }
