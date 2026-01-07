@@ -11,6 +11,9 @@ export class PersonalDetailsPage {
 
     private async fillIfProvided(locator: Locator, value?: string): Promise<void> {
         if (!value) return;
+        await this.page.waitForTimeout(500);
+        await locator.clear();
+        await this.page.waitForTimeout(500);
         await locator.fill(value);
     }
 
@@ -43,6 +46,7 @@ export class PersonalDetailsPage {
     }
 
     async fillFirstName(value?: string): Promise<void> {
+        
         await this.fillIfProvided(this.firstNameInput, value);
     }
 

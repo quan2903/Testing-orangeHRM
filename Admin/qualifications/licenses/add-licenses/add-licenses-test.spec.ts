@@ -7,97 +7,163 @@ import { LicenseFactory } from '../licenses-factory';
 const ADMIN_USERNAME = process.env.ADMIN_USERNAME;
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 
-// Mirror test style used across the project (e.g., skills add tests)
 test.beforeEach(async ({ page }) => {
-  const loginpage = new LoginPage(page);
-  await loginpage.goto();
-  await loginpage.login(ADMIN_USERNAME!, ADMIN_PASSWORD!);
+  const loginPage = new LoginPage(page);
+  await loginPage.goto();
+  await loginPage.login(ADMIN_USERNAME!, ADMIN_PASSWORD!);
+
   const qualificationsPage = new QualificationsPage(page);
   await qualificationsPage.goto();
   await qualificationsPage.navigateToLicenses();
 });
 
-test.describe('Thêm mới giấy phép - các hành vi hợp lệ và cạnh biên', () => {
-  test('Kiểm tra thêm mới license với tên có 1 ký tự, toàn bộ là ký tự số/chữ', async ({ page }) => {
+test.describe('Thêm mới giấy phép - các hành vi hợp lệ', () => {
+  test('Tên có 1 ký tự số/chữ', async ({ page }) => {
     const action = new AddLicenseAction(page);
     const factory = new LicenseFactory();
-    const license = factory.createValidNameWith1CharacterAndNumberCharacters();
-    const errorVisible = await action.addAndVerifyLicense(license);
-    expect(errorVisible).toBeTruthy();
+    const license = factory.createNameWith1Digit();
+    await action.addLicense(license);
+    const isExist = await action.isLicenseExist(license.name!);
+    expect(isExist).toBeTruthy();
   });
 
-  test('Kiểm tra thêm mới giấy phép với tên có 99 ký tự, toàn bộ là ký tự đặc biệt', async ({ page }) => {
+  test('Tên có 99 ký tự đặc biệt', async ({ page }) => {
     const action = new AddLicenseAction(page);
     const factory = new LicenseFactory();
-    const license = factory.createValidNameWith99CharactersAndSpecialCharacters();
-    const errorVisible = await action.addAndVerifyLicense(license);
-    expect(errorVisible).toBeTruthy();
+    const license = factory.createNameWith99SpecialCharacters();
+    await action.addLicense(license);
+    const isExist = await action.isLicenseExist(license.name!);
+    expect(isExist).toBeTruthy();
   });
 
-  test('Kiểm tra thêm mới giấy phép với tên có 100 ký tự, bao gồm tất cả ký tự tiếng Việt', async ({ page }) => {
+  test('Tên có 100 ký tự tiếng Việt', async ({ page }) => {
     const action = new AddLicenseAction(page);
     const factory = new LicenseFactory();
-    const license = factory.createValidNameWith100CharactersAndAllVietNameseCharacters();
-    const errorVisible = await action.addAndVerifyLicense(license);
-    expect(errorVisible).toBeTruthy();
+    const license = factory.createNameWith100VietnameseCharacters();
+    await action.addLicense(license);
+    const isExist = await action.isLicenseExist(license.name!);
+    expect(isExist).toBeTruthy();
   });
 
-  test('Kiểm tra thêm mới giấy phép với tên là ký tự tiếng Trung', async ({ page }) => {
+  test('Tên là ký tự tiếng Trung', async ({ page }) => {
     const action = new AddLicenseAction(page);
     const factory = new LicenseFactory();
-    const license = factory.createValidNameWithChineseCharacters();
-    const errorVisible = await action.addAndVerifyLicense(license);
-    expect(errorVisible).toBeTruthy();
+    const license = factory.createNameWithChineseCharacters();
+    await action.addLicense(license);
+    const isExist = await action.isLicenseExist(license.name!);
+    expect(isExist).toBeTruthy();
   });
 
-  test('Kiểm tra thêm mới giấy phép với tên có thể dán từ clipboard', async ({ page }) => {
+  test('Tên có thể paste từ clipboard', async ({ page }) => {
     const action = new AddLicenseAction(page);
     const factory = new LicenseFactory();
     const license = factory.createValidPastableName();
-    const errorVisible = await action.addAndVerifyLicense(license);
-    expect(errorVisible).toBeTruthy();
+    await action.addLicense(license);
+    const isExist = await action.isLicenseExist(license.name!);
+    expect(isExist).toBeTruthy();
   });
 
-  test('Kiểm tra thêm mới giấy phép với tên có 1 ký tự space ở đầu', async ({ page }) => {
+  test('Tên có 1 space ở đầu', async ({ page }) => {
     const action = new AddLicenseAction(page);
     const factory = new LicenseFactory();
     const license = factory.createNameWithOneSpaceAtStart();
-    const errorVisible = await action.addAndVerifyLicense(license);
-    expect(errorVisible).toBeTruthy();
+    await action.addLicense(license);
+    const isExist = await action.isLicenseExist(license.name!);
+    expect(isExist).toBeTruthy();
   });
 
-  test('Kiểm tra thêm mới giấy phép với tên có 1 ký tự space ở cuối', async ({ page }) => {
+  test('Tên có 1 space ở cuối', async ({ page }) => {
     const action = new AddLicenseAction(page);
     const factory = new LicenseFactory();
     const license = factory.createNameWithOneSpaceAtEnd();
-    const errorVisible = await action.addAndVerifyLicense(license);
-    expect(errorVisible).toBeTruthy();
+    await action.addLicense(license);
+    const isExist = await action.isLicenseExist(license.name!);
+    expect(isExist).toBeTruthy();
   });
 
-  test('Kiểm tra thêm mới giấy phép với tên có nhiều ký tự space ở đầu', async ({ page }) => {
+  test('Tên có nhiều space ở đầu', async ({ page }) => {
     const action = new AddLicenseAction(page);
     const factory = new LicenseFactory();
     const license = factory.createNameWithMultipleSpacesAtStart();
-    const errorVisible = await action.addAndVerifyLicense(license);
-    expect(errorVisible).toBeTruthy();
+    await action.addLicense(license);
+    const isExist = await action.isLicenseExist(license.name!);
+    expect(isExist).toBeTruthy();
   });
 
-  test('Kiểm tra thêm mới giấy phép với tên có nhiều ký tự space ở cuối', async ({ page }) => {
+  test('Tên có nhiều space ở cuối', async ({ page }) => {
     const action = new AddLicenseAction(page);
     const factory = new LicenseFactory();
     const license = factory.createNameWithMultipleSpacesAtEnd();
-    const errorVisible = await action.addAndVerifyLicense(license);
-    expect(errorVisible).toBeTruthy();
+    await action.addLicense(license);
+    const isExist = await action.isLicenseExist(license.name!);
+    expect(isExist).toBeTruthy();
   });
 
-  test('Kiểm tra thêm mới giấy phép trùng tên nhưng khác hoa/thường', async ({ page }) => {
+  test('Trùng tên nhưng khác hoa thường', async ({ page }) => {
     const action = new AddLicenseAction(page);
     const factory = new LicenseFactory();
-    const baseName = await action.copyLicense();
-    const variant = factory.createNameWithDifferentCase(baseName);
-    const errorVisible = await action.addAndVerifyLicense(variant);
+    const baseName = await action.getFirstLicenseName();
+    const license = factory.createNameDuplicateDifferentCase(baseName);
+    await action.addLicense(license);
+    const isExist = await action.isLicenseExist(license.name!);
+    expect(isExist).toBeTruthy();
+  });
+});
+
+test.describe('Thêm mới giấy phép không hợp lệ', () => {
+  test('Tên để trống', async ({ page }) => {
+    const action = new AddLicenseAction(page);
+    const factory = new LicenseFactory();
+    const license = factory.createEmptyName();
+    await action.addLicense(license);
+    const errorVisible = await action.isNameErrorVisible();
     expect(errorVisible).toBeTruthy();
+    const isExist = await action.isLicenseExist(license.name!);
+    expect(isExist).toBeFalsy();
   });
 
+  test('Tên có 101 ký tự', async ({ page }) => {
+    const action = new AddLicenseAction(page);
+    const factory = new LicenseFactory();
+    const license = factory.createNameWith101Characters();
+    await action.addLicense(license);
+    const errorVisible = await action.isNameErrorVisible();
+    expect(errorVisible).toBeTruthy();
+    const isExist = await action.isLicenseExist(license.name!);
+    expect(isExist).toBeFalsy();
+  });
 
+  test('Tên có 300 ký tự', async ({ page }) => {
+    const action = new AddLicenseAction(page);
+    const factory = new LicenseFactory();
+    const license = factory.createNameWith300Characters();
+    await action.addLicense(license);
+    const errorVisible = await action.isNameErrorVisible();
+    expect(errorVisible).toBeTruthy();
+    const isExist = await action.isLicenseExist(license.name!);
+    expect(isExist).toBeFalsy();
+  });
+
+  test('Tên toàn space', async ({ page }) => {
+    const action = new AddLicenseAction(page);
+    const factory = new LicenseFactory();
+    const license = factory.createNameWithOnlySpaces();
+    await action.addLicense(license);
+    const errorVisible = await action.isNameErrorVisible();
+    expect(errorVisible).toBeTruthy();
+    const isExist = await action.isLicenseExist(license.name!);
+    expect(isExist).toBeFalsy();
+  });
+
+  test('Tên trùng với tên có sẵn', async ({ page }) => {
+    const action = new AddLicenseAction(page);
+    const factory = new LicenseFactory();
+    const baseName = await action.getFirstLicenseName();
+    const license = factory.createDuplicateName(baseName);
+    await action.addLicense(license);
+    const errorVisible = await action.isNameErrorVisible();
+    expect(errorVisible).toBeTruthy();
+    const isExist = await action.isLicenseExist(license.name!);
+    expect(isExist).toBeFalsy();
+  });
 });

@@ -53,7 +53,7 @@ export class AddPayGradesPage {
                 error = base.filter({ hasText: /Required|Should not exceed 50 characters|Already exists/ });
                 break;
             case 'salary':
-                error = base.filter({ hasText: /Invalid|Minimum salary must be less than maximum/ });
+                error = base.filter({ hasText: /Invalid|Minimum salary must not exceed maximum/ });
                 break;
             default:
                 return false;

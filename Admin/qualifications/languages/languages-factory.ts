@@ -1,23 +1,23 @@
 import { faker } from "@faker-js/faker";
-import { Membership } from "./memberships-type";
+import { Language } from "./languages-type";
 
-export class MembershipFactory {
-    constructor(private base?: Partial<Membership>) {}
+export class LanguageFactory {
+    constructor(private base?: Partial<Language>) {}
 
-    createNameWith1Digit(): Membership {
+    createValidNameWith1CharacterAndNumber(): Language {
         return { name: faker.string.numeric(1), ...this.base };
     }
 
-    createNameWith49SpecialCharacters(): Membership {
+    createValidNameWith119SpecialCharacters(): Language {
         const specialChars = "!@#$%^&*()_+-=[]{}';:\"\\|,.<>/?";
         let name = '';
-        for (let i = 0; i < 49; i++) {
+        for (let i = 0; i < 119; i++) {
             name += specialChars[Math.floor(Math.random() * specialChars.length)];
         }
         return { name, ...this.base };
     }
 
-    createNameWith50VietnameseCharacters(): Membership {
+    createValidNameWith120VietnameseCharacters(): Language {
         const vietnameseChars =
             "aáàảãạăắằẳẵặâấầẩẫậeéèẻẽẹêếềểễệ" +
             "iíìỉĩịoóòỏõọôốồổỗộơớờởỡợ" +
@@ -26,33 +26,33 @@ export class MembershipFactory {
             "IÍÌỈĨỊOÓÒỎÕỌÔỐỒỔỖỘƠỚỜỞỠỢ" +
             "UÚÙỦŨỤƯỨỪỬỮỰYÝỲỶỸỴ";
         let name = '';
-        for (let i = 0; i < 50; i++) {
+        for (let i = 0; i < 120; i++) {
             name += vietnameseChars[Math.floor(Math.random() * vietnameseChars.length)];
         }
         return { name, ...this.base };
     }
 
-    createNameWithChineseCharacters(): Membership {
-        return { name: "会员卡", ...this.base };
+    createValidNameWithChineseCharacters(): Language {
+        return { name: "语言类型", ...this.base };
     }
 
-    createNameWithOneSpaceAtStart(): Membership {
+    createNameWithOneSpaceAtStart(): Language {
         return { name: " " + faker.string.alpha({ length: 10 }), ...this.base };
     }
 
-    createNameWithOneSpaceAtEnd(): Membership {
+    createNameWithOneSpaceAtEnd(): Language {
         return { name: faker.string.alpha({ length: 10 }) + " ", ...this.base };
     }
 
-    createNameWithMultipleSpacesAtStart(): Membership {
+    createNameWithMultipleSpacesAtStart(): Language {
         return { name: "     " + faker.string.alpha({ length: 10 }), ...this.base };
     }
 
-    createNameWithMultipleSpacesAtEnd(): Membership {
+    createNameWithMultipleSpacesAtEnd(): Language {
         return { name: faker.string.alpha({ length: 10 }) + "     ", ...this.base };
     }
 
-    createValidPastableName(): Membership {
+    createValidPastableName(): Language {
         const words = faker.word.words({ count: faker.number.int({ min: 2, max: 4 }) });
         return {
             name: Array.isArray(words) ? words.join(' ') : words,
@@ -60,28 +60,28 @@ export class MembershipFactory {
         };
     }
 
-    createNameDuplicateDifferentCase(baseName: string): Membership {
+    createNameWithDifferentCase(baseName?: string): Language {
         const variants = [
-            baseName.toUpperCase(),
-            baseName.toLowerCase(),
-            baseName.charAt(0).toUpperCase() + baseName.slice(1).toLowerCase()
+            baseName!.toUpperCase(),
+            baseName!.toLowerCase(),
+            baseName!.charAt(0).toUpperCase() + baseName!.slice(1).toLowerCase()
         ];
         return { name: variants[Math.floor(Math.random() * variants.length)], ...this.base };
     }
 
-    createEmptyName(): Membership {
+    createEmptyName(): Language {
         return { name: "", ...this.base };
     }
 
-    createNameWith51Characters(): Membership {
-        return { name: faker.string.alpha({ length: 51 }), ...this.base };
+    createNameWith121Characters(): Language {
+        return { name: faker.string.alpha({ length: 121 }), ...this.base };
     }
 
-    createNameWith200Characters(): Membership {
-        return { name: faker.string.alpha({ length: 200 }), ...this.base };
+    createNameWith300Characters(): Language {
+        return { name: faker.string.alpha({ length: 300 }), ...this.base };
     }
 
-    createNameWithOnlySpaces(): Membership {
+    createNameWithOnlySpaces(): Language {
         return { name: "          ", ...this.base };
     }
 }

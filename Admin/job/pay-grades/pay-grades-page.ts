@@ -39,19 +39,23 @@ export class PayGradesPage {
         throw new Error('No Add buttons found on Pay Grades page');
     }
     
-    async clickEditButtonAndGetOldName(name: string) {
-        const rows = this.page.locator('.oxd-table-card');
-        const count = await rows.count();
-        for (let i = 0; i < count; i++) {
-            const row = rows.nth(i);
-            const text = await row.innerText();
-            if (text.includes(name)) {
-                await row.getByRole('button', { name: 'Edit' }).click();
-                return name;
-            }
-        }
-        throw new Error(`Pay grade "${name}" not found`);
-    }
+async clickEditButtonAndGetOldName(): Promise<string> {
+    const firstRow = this.page.locator('.oxd-table-card').first();
+
+    await firstRow.waitFor({ state: 'visible' });
+
+    // Cột name thường nằm ở cell đầu tiên
+    const oldName = await firstRow
+        .locator('.oxd-table-cell')
+        .first()
+        .innerText();
+
+    await firstRow
+        .getByRole('button', { name: '' }).first()
+        .click();
+
+    return oldName.trim();
+}
 
 
     async getFirstRowName(): Promise<string> {

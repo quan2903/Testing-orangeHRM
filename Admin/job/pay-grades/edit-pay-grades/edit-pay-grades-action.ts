@@ -12,29 +12,40 @@ export type PayGradeInput = Partial<{
 export class EditPayGradeAction {
     constructor(private page: Page) {}
 
-    async gotoEdit(oldName: string) {
+    private selectedCurrency?: string;
+    async gotoEdit() {
         const payGradesPage = new PayGradesPage(this.page);
-        await payGradesPage.clickEditButtonAndGetOldName(oldName);
+        await payGradesPage.clickEditButtonAndGetOldName();
+    }
+    async clickAddButton(){
+        const paygrade = new PayGradesPage(this.page);
+        await paygrade.clickAddButton()
     }
 
-    async editPayGrade(oldName: string, newData: PayGradeInput) {
-        await this.fillEditForm(oldName, newData);
+    async editPayGrade( newData: PayGradeInput) {
+
+        await this.fillEditForm(newData);
         const editPage = new EditPayGradesPage(this.page);
         await editPage.clickSave();
+        await this.page.waitForTimeout(500);
+        await expect(this.page.locator('.oxd-table-card').first()).toBeVisible();
     }
 
-    async fillEditForm(oldName: string, newData: PayGradeInput) {
+    async fillEditForm(newData: PayGradeInput) {
         const editPage = new EditPayGradesPage(this.page);
-        await this.gotoEdit(oldName);
-
+        await this.gotoEdit();
+        await this.clickAddButton();
         if (newData.name !== undefined) await editPage.fillName(newData.name);
-        if (newData.currency !== undefined) await editPage.fillCurrency(newData.currency);
+        await this.page.waitForTimeout(500);
+        this.selectedCurrency = await editPage.selectRandomCurrency();
+        await this.page.waitForTimeout(500);
         if (newData.minimumSalary !== undefined) await editPage.fillMinimumSalary(newData.minimumSalary);
+        await this.page.waitForTimeout(500);
         if (newData.maximumSalary !== undefined) await editPage.fillMaximumSalary(newData.maximumSalary);
     }
 
-    async editPayGradeWithoutSave(oldName: string, newData: PayGradeInput) {
-        await this.fillEditForm(oldName, newData);
+    async editPayGradeWithoutSave( newData: PayGradeInput) {
+        await this.fillEditForm(newData);
     }
 
     async cancelEdit() {
@@ -69,4 +80,33 @@ export class EditPayGradeAction {
         const editPage = new EditPayGradesPage(this.page);
         return editPage.isMaximumSalaryErrorVisible();
     }
+async isCurrencyExist(): Promise<boolean> {
+    const currency =  this.selectedCurrency;
+    if (!currency) return false;
+
+    const normalizedCurrency = currency.includes('-')
+        ? currency.split('-').slice(1).join('-').trim()
+        : currency.trim();
+
+    try {
+        const rows = this.page.locator('.oxd-table-card');
+        const count = await rows.count();
+
+        for (let i = 0; i < count; i++) {
+            const row = rows.nth(i);
+            await row.scrollIntoViewIfNeeded();
+
+            const text = (await row.innerText()).trim();
+
+            if (text.includes(normalizedCurrency)) {
+                return true;
+            }
+        }
+        return false;
+    } catch {
+        return false;
+    }
+}
+
+
 }

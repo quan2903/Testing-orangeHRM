@@ -1,18 +1,22 @@
 import { EducationPage } from "../education-page";
 import { Page } from "playwright-core";
+
 export class EditEducationPage {
     constructor(public page: Page) {}
 
-    async goto(name: string) {
+    async goto() {
         const educationPage = new EducationPage(this.page);
+
+        const name = await educationPage.getFirstEducationName();
+        if (!name) {
+            throw new Error('No education found to edit');
+        }
+
         await educationPage.clickEditButton(name);
     }
 
     async fillEducationName(name: string) {
-        const nameInput = this.page
-            .locator('div.oxd-input-group')
-            .filter({ has: this.page.locator('label', { hasText: 'Name' }) })
-            .locator('input.oxd-input');
+        const nameInput = this.page.locator('form').getByRole('textbox');
         await nameInput.clear();
         await nameInput.fill(name);
     }
@@ -20,22 +24,4 @@ export class EditEducationPage {
     async clickSaveButton() {
         await this.page.getByRole('button', { name: 'Save' }).click();
     }
-
-    async isEducationNameErrorVisible(): Promise<boolean> {
-        const base = this.page.locator(
-            'span.oxd-text.oxd-text--span.oxd-input-field-error-message'
-        );
-        const error = base
-            .filter({ hasText: 'Required' })
-            .or(base.filter({ hasText: /Required|Should be less than 100 characters|Already exists/ }));
-        try {
-            await error.first().waitFor({ state: 'visible', timeout: 5000 });
-            return true;
-        }
-        catch {
-            return false;
-        }
-    }
-
-
 }
