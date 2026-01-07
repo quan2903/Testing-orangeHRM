@@ -124,4 +124,37 @@ export class SkillsFactory {
             description: faker.string.alpha({ length: 20 }) + "     "
         };
     }
+    createEmptyName(): Skills {
+    return { name: "" };
+}
+
+createNameWith121Characters(): Skills {
+    return { name: faker.string.alpha({ length: 121 }) };
+}
+
+createNameWith300Characters(): Skills {
+    return { name: faker.string.alpha({ length: 300 }) };
+}
+
+createNameWithOnlySpaces(): Skills {
+    return { name: "          " };
+}
+
+createDuplicateName(baseName: string): Skills {
+    return { name: baseName };
+}
+
+createNameAndDescriptionWith401Characters(): Skills {
+    return {
+        name: faker.string.alpha({ length: 10 }),
+        description: faker.string.alpha({ length: 401 })
+    };
+}
+
+createNameAndDescriptionWith600Characters(): Skills {
+    return {
+        name: faker.string.alpha({ length: 10 }),
+        description: faker.string.alpha({ length: 600 })
+    };
+}
 }

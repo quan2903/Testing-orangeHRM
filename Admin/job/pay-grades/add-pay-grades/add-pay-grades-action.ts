@@ -1,38 +1,52 @@
 import { Page, expect } from "@playwright/test";
-import { PayGradesPage } from "../pay-grades-page";
 import { AddPayGradesPage } from "./add-pay-grades-page";
-
-
-export type PayGradeInput = Partial<{
-    name: string;
-    currency: string;
-    minumumSalary: number;
-    maximumSalary: number;
-    
-}>;
+import PayGradeType from "../pay-grades-type";
+import { PayGradesPage } from "../pay-grades-page"
 
 export class AddPayGradesAction {
     constructor(private page: Page) {}
 
     async goto() {
-        const payGradesPage = new PayGradesPage(this.page);
-        await payGradesPage.clickAddButton();
+        const addPage = new AddPayGradesPage(this.page);
+        await addPage.goto();
     }
 
-    async addPayGrade(payGrade: PayGradeInput) {
+    // === Flow cũ: thêm + save + chọn currency ===
+    async addPayGrade(payGrade: PayGradeType) {
         const addPage = new AddPayGradesPage(this.page);
-        await this.goto();
-
-        if (payGrade.name !== undefined) await addPage.fillName(payGrade.name);
-
-        await addPage.clickSaveButton();
+        await addPage.goto();
+        await addPage.fillPayGradeDetails(
+            payGrade.name!,
+            payGrade.currency,
+            payGrade.minimumSalary,
+            payGrade.maximumSalary
+        );
     }
 
-    async addPayGradeWithoutSave(payGrade: PayGradeInput) {
-        const addPage = new AddPayGradesPage(this.page);
-        await this.goto();
 
-        if (payGrade.name !== undefined) await addPage.fillName(payGrade.name);
+    async addPayGradeWithNameOnly(payGrade: PayGradeType) {
+        const addPage = new AddPayGradesPage(this.page);
+        await addPage.goto();
+        if (payGrade.name) await addPage.fillName(payGrade.name);
+
+
+        await addPage.saveNameOnly();
+        await addPage.page.waitForTimeout(5000);
+        // Cancel currency → vẫn lưu tên
+        await addPage.cancelCurrency();
+    }
+
+    async addPayGradeWithoutSave(payGrade: PayGradeType) {
+        const addPage = new AddPayGradesPage(this.page);
+        await addPage.goto();
+        if (payGrade.name) 
+            await addPage.fillName(payGrade.name);
+        if (payGrade.currency) 
+            await addPage.fillCurrency(payGrade.currency);
+        if (payGrade.minimumSalary !== undefined) 
+            await addPage.fillMinimumSalary(payGrade.minimumSalary);
+        if (payGrade.maximumSalary !== undefined) 
+            await addPage.fillMaximumSalary(payGrade.maximumSalary);
     }
 
     async cancelAddPayGrade() {
@@ -40,25 +54,35 @@ export class AddPayGradesAction {
         await addPage.clickCancelButton();
     }
 
-    async addAndVerifyPayGrade(payGrade: PayGradeInput) {
-        await this.addPayGrade(payGrade);
-
-        if (!payGrade.name) {
-            throw new Error("Pay grade name is required for verification");
-        }
-
-        const payGradesPage = new PayGradesPage(this.page);
-        const exists = await payGradesPage.isPayGradeExist(payGrade.name);
-        expect(exists).toBe(true);
+    async verifyPayGradeExists(name?: string) {
+        if (!name) return;
+        const addPage = new PayGradesPage(this.page);
+        const exists = await addPage.isPayGradeExist(name);
+        expect(exists).toBeTruthy();
     }
 
     async isNameErrorVisible() {
-        const page = new AddPayGradesPage(this.page);
-        return await page.isNameErrorVisible();
+        const addPage = new AddPayGradesPage(this.page);
+        return addPage.isNameErrorVisible();
     }
 
-    async isPayGradeExist(name: string): Promise<boolean> {
-        const payGradesPage = new PayGradesPage(this.page);
-        return await payGradesPage.isPayGradeExist(name);
+    async isSalaryErrorVisible() {
+        const addPage = new AddPayGradesPage(this.page);
+        return addPage.isSalaryErrorVisible();
+    }
+
+    async isPayGradeExist(name?: string): Promise<boolean> {
+        const payPage = new PayGradesPage(this.page);
+        return payPage.isPayGradeExist(name);
+    }
+
+    async isGlobalErrorNotificationVisible(): Promise<boolean> {
+        const addPage = new AddPayGradesPage(this.page);
+        return addPage.isGlobalErrorNotificationVisible();
+    }
+
+    async copyFirstPayGrade(): Promise<string | null> {
+        const addPage = new AddPayGradesPage(this.page);
+        return addPage.copyFirstPayGrade();
     }
 }

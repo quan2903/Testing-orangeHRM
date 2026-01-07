@@ -1,53 +1,77 @@
 import { Page } from "playwright-core";
-import { PayGradesPage } from "../pay-grades-page";
-import { expect } from '@playwright/test';
 
 export class EditPayGradesPage {
     constructor(public page: Page) {}
 
-    /**
-     * Click the Add button for currency (appears in edit page).
-     */
-
-    // Note: navigation to the edit page is performed by actions via PayGradesPage.clickEditButton
-    async clickAddCurrencyButton() {
-    await this.page.getByRole('button', { name: '' }).first().click();
-    await this.page.getByRole('button', { name: ' Add' }).click();
-
-    await this.page.locator('div').filter({ hasText: /^-- Select --$/ }).nth(2).click();
-    
-       
+    async fillName(name: string) {
+        const input = this.page.getByRole('textbox').nth(1);
+        await input.clear();
+        await input.fill(name);
     }
-    async clickEditCurrencyButton() {
-    await this.page.getByRole('button', { name: '' }).first().click();
-  
+
+async selectRandomCurrency(): Promise<string> {
+    const dropdown = this.page.locator('div').filter({ hasText: /^-- Select --$/ }).nth(2);
+    await dropdown.click();
+
+    const panel = this.page.locator('.oxd-select-dropdown');
+    const optionLocator = panel.locator('.oxd-select-option');
+
+    const collected: string[] = [];
+    let previousScrollTop = -1;
+
+    while (true) {
+        const count = await optionLocator.count();
+
+        for (let i = 0; i < count; i++) {
+            const text = (await optionLocator.nth(i).innerText()).trim();
+            if (text && !collected.includes(text)) {
+                collected.push(text);
+            }
+        }
+
+        const currentScrollTop = await panel.evaluate(el => el.scrollTop);
+
+        await panel.evaluate(el => {
+            el.scrollTop = el.scrollTop + el.clientHeight;
+        });
+
+        await this.page.waitForTimeout(200);
+
+        const newScrollTop = await panel.evaluate(el => el.scrollTop);
+
+        if (newScrollTop === currentScrollTop || newScrollTop === previousScrollTop) {
+            break;
+        }
+
+        previousScrollTop = currentScrollTop;
     }
-async clickCurrency() {
-    // 1. Click dropdown (GIỮ NGUYÊN locator đang hoạt động)
-    const dropdownTrigger = this.page
-        .locator('div')
-        .filter({ hasText: /^-- Select --$/ })
-        .nth(2);
 
-    await dropdownTrigger.waitFor({ state: 'visible', timeout: 5000 });
-    await dropdownTrigger.click();
+    if (collected.length === 0) {
+        throw new Error('Currency dropdown is empty');
+    }
 
-    // 2. ĐỢI OPTION XUẤT HIỆN (quan trọng)
-    const options = this.page.locator('.oxd-select-option');
+    const randomIndex = Math.floor(Math.random() * collected.length);
+    const chosenCurrency = collected[randomIndex];
 
-  
-    await this.page.getByRole('option', { name: 'AOR - Angolan New Kwanza' }).click();
+    await optionLocator
+        .filter({ hasText: chosenCurrency })
+        .first()
+        .click();
+
+    return chosenCurrency;
 }
 
-    async fillName(name: string) {
-        await this.page.getByRole('textbox').nth(1).clear();
-        await this.page.getByRole('textbox').nth(1).fill(name);
+    async fillMinimumSalary(minimumSalary: number) {
+        const input = this.page.getByRole('textbox').nth(3);
+        await input.clear();
+        await input.fill(minimumSalary.toString());
     }
-    /**
-     * If `currency` is provided, select that option. Otherwise pick one from the UI dropdown and return its name.
-     * Returns the selected currency name when choosing from UI, or the passed currency when provided.
-     */
-  
+
+    async fillMaximumSalary(maximumSalary: number) {
+        const input = this.page.getByRole('textbox').nth(3);
+        await input.clear();
+        await input.fill(maximumSalary.toString());
+    }
 
     async clickSave() {
         await this.page.getByRole('button', { name: 'Save' }).nth(1).click();
@@ -56,58 +80,30 @@ async clickCurrency() {
     async clickCancel() {
         await this.page.getByRole('button', { name: 'Cancel' }).click();
     }
-    async fillMinimumSalary(minimumSalary: number) {
-        await this.page.getByRole('textbox').nth(3).clear();
-        await this.page.getByRole('textbox').nth(3).fill(minimumSalary.toString());
-    }
-    async fillMaximumSalary(maximumSalary: number) {
-        await this.page.getByRole('textbox').nth(4).clear();
-        await this.page.getByRole('textbox').nth(4).fill(maximumSalary.toString());
-    }
-    /**
-     * Check if currency error message is visible.
-     */
+
     async isCurrencyErrorVisible(): Promise<boolean> {
-        // Prefer locating the specific form group that contains the 'Currency' label
-        // so we don't accidentally pick up validation messages from other fields (e.g. Name).
-        // Use an XPath that finds the label node and then its nearest ancestor div container.
-        const currencyContainer = this.page.locator('//label[normalize-space()="Currency"]/ancestor::div[1]');
-        const error = currencyContainer.locator('span.oxd-text.oxd-text--span.oxd-input-field-error-message')
+        const container = this.page.locator('//label[normalize-space()="Currency"]/ancestor::div[1]');
+        const error = container.locator('span.oxd-text.oxd-text--span.oxd-input-field-error-message')
             .filter({ hasText: /Required/ });
-        try {
-            await error.first().waitFor({ state: 'visible', timeout: 5000 });
-            return true;
-        } catch {
-            return false;
-        }
+        try { await error.first().waitFor({ state: 'visible', timeout: 5000 }); return true; } 
+        catch { return false; }
     }
 
-    /**
-     * Check if minimum salary error message is visible.
-     */
     async isMinimumSalaryErrorVisible(): Promise<boolean> {
-        const currencyContainer = this.page.locator('//label[normalize-space()="Minimum Salary"]/ancestor::div[1]');
-        const error = currencyContainer.locator('span.oxd-text.oxd-text--span.oxd-input-field-error-message')
-            .filter({ hasText: /Required|Should be a valid number|Minimum Salary must be less than Maximum Salary/ });
-        try {
-            await error.first().waitFor({ state: 'visible', timeout: 5000 });
-            return true;
-        } catch {
-            return false;
-        }
+        const container = this.page.locator('//label[normalize-space()="Minimum Salary"]/ancestor::div[1]');
+        const error = container.locator('span.oxd-text.oxd-text--span.oxd-input-field-error-message')
+            .filter({ hasText: /Required|Should be a valid number|Minimum Salary must not exceed Maximum Salary/ });
+        try { await error.first().waitFor({ state: 'visible', timeout: 5000 }); return true; } 
+        catch { return false; }
     }
 
-    /**
-     * Check if maximum salary error message is visible.
-     */
     async isMaximumSalaryErrorVisible(): Promise<boolean> {
-        const currencyContainer = this.page.locator('//label[normalize-space()="Minimum Salary"]/ancestor::div[1]');
-        const error = currencyContainer.locator('span.oxd-text.oxd-text--span.oxd-input-field-error-message')
-        try {
-            await error.first().waitFor({ state: 'visible', timeout: 5000 });
-            return true;
-        } catch {
-            return false;
-        }
+        const container = this.page.locator('//label[normalize-space()="Maximum Salary"]/ancestor::div[1]');
+        const error = container.locator('span.oxd-text.oxd-text--span.oxd-input-field-error-message')
+        .filter({hasText: 'Should be less than 1,000,000,000'});
+        try { await error.first().waitFor({ state: 'visible', timeout: 5000 }); return true; } 
+        catch { return false; }
     }
+
+
 }

@@ -99,4 +99,96 @@ export class PayGradeFactory {
             ...this.base,
         };
     }
+    createValidNameWith51Characters(): PayGrade {
+    return {
+        name: faker.string.alpha({ length: 51 }),
+        ...this.base,
+        };
+    }
+
+    createValidNameWith255Characters(): PayGrade {
+        return {
+            name: faker.string.alpha({ length: 255 }),
+            ...this.base,
+        };
+    }
+
+    createValidNameEmpty(): PayGrade {
+        return {
+            name: '',
+            ...this.base,
+        };
+    }
+
+    createValidNameAllSpaces(): PayGrade {
+        return {
+            name: '   ',
+            ...this.base,
+        };
+    }
+
+    createValidNameWithNumbers(): PayGrade {
+        return {
+            name: 'Grade123',
+            ...this.base,
+        };
+    }
+
+    createValidNameWithEmoji(): PayGrade {
+        return {
+            name: 'Salary💰',
+            ...this.base,
+        };
+    }
+
+    // Các case tên trùng hoặc có khoảng trắng theo yêu cầu testcase
+    createValidNameDuplicate(
+
+        name: string
+    ): PayGrade {
+        return {
+            name,
+            ...this.base,
+        };
+    }
+
+    createValidNameDuplicateWith1SpaceAtStart(
+
+        name: string
+    ): PayGrade {
+        return {
+            name: ' ' + name,
+            ...this.base,
+        };
+    }
+
+    createValidNameDuplicateWith1SpaceAtEnd(
+
+        name: string
+    ): PayGrade {
+        return {
+            name: name + ' ',
+            ...this.base,
+        };
+    }
+
+    createValidNameDuplicateWithMultipleSpacesAtStart(
+
+        name: string
+    ): PayGrade {
+        return {
+            name: '   ' + name,
+            ...this.base,
+        };
+    }
+
+    createValidNameDuplicateWithMultipleSpacesAtEnd(
+
+        name: string
+    ): PayGrade {
+        return {
+            name: name + '   ',
+            ...this.base,
+        };
+    }
 }

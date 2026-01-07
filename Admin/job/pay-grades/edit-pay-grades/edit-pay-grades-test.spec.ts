@@ -4,7 +4,7 @@ import { PayGradeFactory } from '../pay-grade-factory';
 import { LoginPage } from "../../../login/login-page/LoginPage";
 import { JobPage } from '../../job-page';
 
-const EXISTING_PAY_GRADE_NAME = 'Grade 1'; // Thay bằng tên dải lương thực tế hoặc tạo dải lương trong beforeEach
+// Thay bằng tên dải lương thực tế hoặc tạo dải lương trong beforeEach
 const ADMIN_USERNAME = process.env.ADMIN_USERNAME 
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD
 
@@ -25,57 +25,64 @@ test.describe('Edit Pay Grade - salary & currency validation cases', () => {
     const action = new EditPayGradeAction(page);
     const payGrade = new PayGradeFactory;
     const dt = payGrade.createEditWithCurrencyOnly();
-    await action.editPayGradeWithoutSave(EXISTING_PAY_GRADE_NAME, dt);
+    await action.editPayGrade(dt);
     expect(await action.isCurrencyErrorVisible()).toBeFalsy();
+    expect(await action.isCurrencyExist()).toBeTruthy();
   });
 
   test('Chỉnh sửa với lương tối thiểu = 1', async ({ page }) => {
     const action = new EditPayGradeAction(page);
     const payGrade = new PayGradeFactory;
     const dt = payGrade.createEditWithCurrencyAndMinimum(1);
-    await action.editPayGrade(EXISTING_PAY_GRADE_NAME, dt);
+    await action.editPayGrade(dt);
     expect(await action.isMinimumSalaryErrorVisible()).toBeFalsy();
+    expect (await action.isCurrencyExist()).toBeTruthy();
   });
 
   test('Chỉnh sửa với lương tối thiểu = 0', async ({ page }) => {
     const action = new EditPayGradeAction(page);
     const payGrade = new PayGradeFactory();
     const dt = payGrade.createEditWithCurrencyAndMinimum(0);
-    await action.editPayGrade(EXISTING_PAY_GRADE_NAME, dt);
+    await action.editPayGrade( dt);
     expect(await action.isMinimumSalaryErrorVisible()).toBeFalsy();
+    expect (await action.isCurrencyExist()).toBeTruthy();
+  });
+
+  test('Chỉnh sửa với lương tối đa = 999,999,998', async ({ page }) => {
+    const action = new EditPayGradeAction(page);
+    const payGrade = new PayGradeFactory();
+    const dt = payGrade.createEditWithCurrencyAndMaximum(999999998);
+    await action.editPayGrade(dt);
+    expect(await action.isMaximumSalaryErrorVisible()).toBeFalsy();
+    expect (await action.isCurrencyExist()).toBeTruthy();
   });
 
   test('Chỉnh sửa với lương tối đa = 999,999,999', async ({ page }) => {
     const action = new EditPayGradeAction(page);
     const payGrade = new PayGradeFactory();
     const dt = payGrade.createEditWithCurrencyAndMaximum(999999999);
-    await action.editPayGrade(EXISTING_PAY_GRADE_NAME, dt);
+    await action.editPayGradeWithoutSave(dt);
     expect(await action.isMaximumSalaryErrorVisible()).toBeFalsy();
-  });
-
-  test('Chỉnh sửa với lương tối đa = 1,000,000,000', async ({ page }) => {
-    const action = new EditPayGradeAction(page);
-    const payGrade = new PayGradeFactory();
-    const dt = payGrade.createEditWithCurrencyAndMaximum(1000000000);
-    await action.editPayGradeWithoutSave(EXISTING_PAY_GRADE_NAME, dt);
-    expect(await action.isMaximumSalaryErrorVisible()).toBeTruthy();
+    expect (await action.isCurrencyExist()).toBeTruthy();
   });
 
   test('Chỉnh sửa với lương tối thiểu dạng thập phân 1 chữ số', async ({ page }) => {
     const action = new EditPayGradeAction(page);
     const payGrade = new PayGradeFactory();
     const dt = payGrade.createEditWithCurrencyAndMinimum(1.5);
-    await action.editPayGradeWithoutSave(EXISTING_PAY_GRADE_NAME, dt);
+    await action.editPayGrade(dt);
     expect(await action.isMinimumSalaryErrorVisible()).toBeFalsy();
+    expect (await action.isCurrencyExist()).toBeTruthy();
   });
 
   test('Chỉnh sửa với lương tối thiểu < lương tối đa', async ({ page }) => {
     const action = new EditPayGradeAction(page);
     const payGrade = new PayGradeFactory();
     const dt = payGrade.createEditWithCurrencyAndMinMax(1000, 2000);
-    await action.editPayGradeWithoutSave(EXISTING_PAY_GRADE_NAME, dt);
+    await action.editPayGrade(dt);
     expect(await action.isMinimumSalaryErrorVisible()).toBeFalsy();
     expect(await action.isMaximumSalaryErrorVisible()).toBeFalsy();
+    expect (await action.isCurrencyExist()).toBeTruthy();
   });
 
 });

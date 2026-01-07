@@ -1,12 +1,9 @@
     import { test, expect } from '@playwright/test';
-    import { AddJobTitlesPage } from "./add-job-titles-page";
-    import { JobTitlesPage } from "../job-title-page";
     import { JobTitleFactory } from "../job-titles-factory";
     import { LoginPage } from "../../../login/login-page/LoginPage";
     import { JobPage } from '../../job-page';
-    import { AdminPage } from '../../../AdminPage';
     import { AddJobTitlesAction } from './add-job-titles-action';
-    import JobTitle from '../job-titles-type';
+   
 
     const ADMIN_USERNAME = process.env.ADMIN_USERNAME;
     const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
@@ -165,14 +162,137 @@
 
         test("Thêm chức danh trùng tên nhưng khác hoa/thường", async ({ page }) => {
             const action = new AddJobTitlesAction(page);
-            // create an initial job
             const base = factory.createValidWithMinimalFields();
             await action.addAndVerifyJobTitle({ name: base.name });
-            // attempt to add same name but different case
             const dup = factory.createValidNameSameWithExistingJobDifferentUppercase(base.name);
             await action.addJobTitle({ name: dup.name });
-            // verify the job (either original or new name exists)
             const exists = await action.isJobTitleExist(dup.name);
-            expect(exists).toBe(true);
+            expect(exists).toBeTruthy();
         });
     });
+    test.describe("Kiểm tra thêm chức danh công việc không hợp lệ", () => {
+    const factory = new JobTitleFactory();
+
+    test("Thêm chức danh với mọi thông tin để trống", async ({ page }) => {
+        const action = new AddJobTitlesAction(page);
+        const data = factory.createInvalidEmptyAllFields();
+        await action.addJobTitle({ name: data.name, description: data.description, note: data.note, file: data.file });
+        expect(await action.isNameErrorVisible()).toBeTruthy();
+    });
+
+    test("Thêm chức danh với chỉ tên công việc để trống", async ({ page }) => {
+        const action = new AddJobTitlesAction(page);
+        const data = factory.createInvalidEmptyName();
+        await action.addJobTitle({ name: data.name, description: data.description, note: data.note });
+        expect(await action.isNameErrorVisible()).toBeTruthy();
+    });
+
+    test("Thêm chức danh trùng tên công việc cũ", async ({ page }) => {
+        const action = new AddJobTitlesAction(page);
+        const existingName = await action.copyFirstJobTitle();
+        if (!existingName) throw new Error("Không có job title để test trùng");
+
+        await action.addJobTitle({ name: existingName });
+        expect(await action.isNameErrorVisible()).toBeTruthy();
+    });
+
+    test("Thêm chức danh với tên toàn ký tự space", async ({ page }) => {
+        const action = new AddJobTitlesAction(page);
+        const data = factory.createInvalidNameWithOnlySpaces();
+        await action.addJobTitle({ name: data.name });
+        expect(await action.isNameErrorVisible()).toBeTruthy();
+    });
+
+    test("Thêm chức danh với tên 101 ký tự", async ({ page }) => {
+        const action = new AddJobTitlesAction(page);
+        const data = factory.createInvalidNameWith101Characters();
+        await action.addJobTitle({ name: data.name });
+        expect(await action.isNameErrorVisible()).toBeTruthy();
+    });
+
+    test("Thêm chức danh với tên 255 ký tự", async ({ page }) => {
+        const action = new AddJobTitlesAction(page);
+        const data = factory.createInvalidNameWith255Characters();
+        await action.addJobTitle({ name: data.name });
+        expect(await action.isNameErrorVisible()).toBeTruthy();
+    });
+
+    test("Thêm chức danh với tên có emoji", async ({ page }) => {
+        const action = new AddJobTitlesAction(page);
+        const data = factory.createInvalidNameWithEmoji();
+        await action.addJobTitle({ name: data.name });
+        expect(await action.isNameErrorVisible()).toBeTruthy();
+    });
+
+    test("Thêm chức danh với mô tả 401 ký tự", async ({ page }) => {
+        const action = new AddJobTitlesAction(page);
+        const data = factory.createInvalidDescriptionWith401Characters();
+        await action.addJobTitle({ name: data.name, description: data.description });
+        expect(await action.isDescriptionErrorVisible()).toBeTruthy();
+    });
+
+    test("Thêm chức danh với mô tả 600 ký tự", async ({ page }) => {
+        const action = new AddJobTitlesAction(page);
+        const data = factory.createInvalidDescriptionWith600Characters();
+        await action.addJobTitle({ name: data.name, description: data.description });
+        expect(await action.isDescriptionErrorVisible()).toBeTruthy();
+    });
+
+    test("Thêm chức danh với ghi chú có emoji", async ({ page }) => {
+        const action = new AddJobTitlesAction(page);
+        const data = factory.createInvalidNoteWithEmoji();
+        await action.addJobTitle({ name: data.name, note: data.note });
+        expect(await action.isNoteErrorVisible()).toBeTruthy();
+    });
+
+    test("Thêm chức danh với ghi chú 401 ký tự", async ({ page }) => {
+        const action = new AddJobTitlesAction(page);
+        const data = factory.createInvalidNoteWith401Characters();
+        await action.addJobTitle({ name: data.name, note: data.note });
+        expect(await action.isNoteErrorVisible()).toBeTruthy();
+    });
+
+    test("Thêm chức danh với ghi chú 600 ký tự", async ({ page }) => {
+        const action = new AddJobTitlesAction(page);
+        const data = factory.createInvalidNoteWith600Characters();
+        await action.addJobTitle({ name: data.name, note: data.note });
+        expect(await action.isNoteErrorVisible()).toBeTruthy();
+    });
+
+    // Các case tên đã có + ký tự space
+    test("Tên đã có + 1 space ở đầu", async ({ page }) => {
+        const action = new AddJobTitlesAction(page);
+        const existingName = await action.copyFirstJobTitle();
+        if (!existingName) throw new Error("Không có job title để test trùng");
+
+        await action.addJobTitle({ name: ` ${existingName}` });
+        expect(await action.isGlobalErrorNotificationVisible()).toBeTruthy();
+    });
+
+    test("Tên đã có + 1 space ở cuối", async ({ page }) => {
+    const action = new AddJobTitlesAction(page);
+    const existingName = await action.copyFirstJobTitle();
+    if (!existingName) throw new Error("Không có job title để test trùng");
+
+    await action.addJobTitle({ name: `${existingName} ` });
+    expect(await action.isGlobalErrorNotificationVisible() || action.isNameErrorVisible()).toBeTruthy();
+    });
+
+    test("Tên đã có + nhiều space ở đầu", async ({ page }) => {
+        const action = new AddJobTitlesAction(page);
+        const existingName = await action.copyFirstJobTitle();
+        if (!existingName) throw new Error("Không có job title để test trùng");
+
+        await action.addJobTitle({ name: `  ${existingName}` });
+        expect(await action.isGlobalErrorNotificationVisible() || action.isNameErrorVisible()).toBeTruthy();
+    });
+
+    test("Tên đã có + nhiều space ở cuối", async ({ page }) => {
+        const action = new AddJobTitlesAction(page);
+        const existingName = await action.copyFirstJobTitle();
+        if (!existingName) throw new Error("Không có job title để test trùng");
+
+        await action.addJobTitle({ name: `${existingName}  ` });
+        expect(await action.isGlobalErrorNotificationVisible() || action.isNameErrorVisible()).toBeTruthy();
+    });
+});

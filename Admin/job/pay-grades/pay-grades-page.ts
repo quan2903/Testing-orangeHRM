@@ -36,50 +36,28 @@ export class PayGradesPage {
             }
         }
 
-        // If still not found, provide a helpful error for debugging (include current HTML snapshot hint)
         throw new Error('No Add buttons found on Pay Grades page');
     }
     
-async isPayGradeExist(expectedName: string): Promise<boolean> {
-    const nameInput = this.page
-        .locator('div.oxd-input-group')
-        .filter({ has: this.page.locator('label', { hasText: 'Name' }) })
-        .locator('input.oxd-input');
+async clickEditButtonAndGetOldName(): Promise<string> {
+    const firstRow = this.page.locator('.oxd-table-card').first();
 
-    try {
-        await nameInput.waitFor({ state: 'visible', timeout: 5000 });
-        const value = (await nameInput.inputValue()).trim();
-        return value === expectedName;
-    } catch {
-        return false;
-    }
+    await firstRow.waitFor({ state: 'visible' });
+
+    // Cột name thường nằm ở cell đầu tiên
+    const oldName = await firstRow
+        .locator('.oxd-table-cell')
+        .first()
+        .innerText();
+
+    await firstRow
+        .getByRole('button', { name: '' }).first()
+        .click();
+
+    return oldName.trim();
 }
 
 
-
-
-    async clickEditButtonAndGetOldName(): Promise<string> {
-        // 1️⃣ Lấy dòng đầu tiên trong bảng
-        const firstRow = this.page.locator('.oxd-table-card').first();
-        await firstRow.waitFor({ state: 'visible', timeout: 10000 });
-
-        // 2️⃣ Lấy oldName từ cột Name
-        // (OrangeHRM: cột đầu tiên là Name)
-        const nameCell = firstRow.locator('.oxd-table-cell').first();
-        const oldName = (await nameCell.innerText()).trim();
-
-        // 3️⃣ Click nút Edit (icon bút chì) trong cùng dòng
-
-        await this.page.getByRole('row', { name: oldName }).getByRole('button').nth(1).click();
-
-        await this.page.getByRole('button', { name: '' }).first().click();
-        // 4️⃣ Trả oldName để dùng cho verify
-        return oldName;
-    }
-
-    /**
-     * Lấy name của dòng đầu tiên (dùng verify sau khi edit)
-     */
     async getFirstRowName(): Promise<string> {
         const firstRow = this.page.locator('.oxd-table-card').first();
         await firstRow.waitFor({ state: 'visible', timeout: 10000 });
@@ -93,18 +71,23 @@ async isPayGradeExist(expectedName: string): Promise<boolean> {
         await payGrade.first().waitFor({ state: 'visible', timeout: 10000 });
         await payGrade.locator('button:has(i.icon-trash)').click();
     }
-
-    /**
-     * Check if name error message is visible.
-     */
-    async isNameErrorVisible(): Promise<boolean> {
-        const error = this.page.locator('span.oxd-text.oxd-text--span.oxd-input-field-error-message')
-            .filter({ hasText: /Required|Should be less than 50 characters/ });
+        async isPayGradeExist(name?: string): Promise<boolean> {
+        if (!name) return false;
         try {
-            await error.first().waitFor({ state: 'visible', timeout: 5000 });
-            return true;
+            const rows = this.page.locator('.oxd-table-card');
+            const count = await rows.count();
+            for (let i = 0; i < count; i++) {
+                const row = rows.nth(i);
+                await row.scrollIntoViewIfNeeded();
+                const text = await row.innerText();
+                if (text.includes(name)) {
+                    return true;
+                }
+            }
+            return false;
         } catch {
             return false;
         }
     }
+
 }

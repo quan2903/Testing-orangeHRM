@@ -7,6 +7,7 @@ export class PersonalDetailsAction {
         await new PersonalDetailsPage(this.page).goto();
     }
     async fillFirstName(firstName: string): Promise<void> {
+        
         await new PersonalDetailsPage(this.page).fillFirstName(firstName);
     }
     async fillMiddleName(middleName: string): Promise<void> {
@@ -39,13 +40,22 @@ export class PersonalDetailsAction {
     
     async updatePersonalDetails(personalDetails: PersonalDetailsType) {
         await this.fillFirstName(personalDetails.firstName);
+        await this.page.waitForTimeout(500);
         await this.fillMiddleName(personalDetails.middleName);
+        await this.page.waitForTimeout(500);
         await this.fillLastName(personalDetails.lastName);
+        await this.page.waitForTimeout(500);
         await this.fillEmployeeId(personalDetails.employeeId);
+        await this.page.waitForTimeout(500);
         await this.fillOtherId(personalDetails.otherId);
+        await this.page.waitForTimeout(500);
         await this.fillLicenseNumber(personalDetails.licenseNumber);
+        await this.page.waitForTimeout(500);
         await this.fillLicenseExpiryDate(personalDetails.licenseExpiryDate);
+        await this.page.waitForTimeout(500);
         await this.fillDateOfBirth(personalDetails.dateOfBirth);
+        await this.page.waitForTimeout(500);
+        await this.page.waitForTimeout(500);
         await this.chooseRandomNationality(personalDetails.nationality);
         await this.saveChanges();
     }

@@ -1,47 +1,69 @@
-import { Page, expect } from "@playwright/test";
-import {EditSkillsPage} from "./edit-skills-page";
+import { Page } from "@playwright/test";
+import { EditSkillsPage } from "./edit-skills-page";
 import { SkillsPage } from "../skills-page";
 import { Skills } from "../skills-type";
 
 export class EditSkillsAction {
     constructor(private page: Page) {}
 
-    async goto(name : string) {
-        const skillsPage = new SkillsPage(this.page);
-        await skillsPage.clickEditButton(name);
+    async goto() {
+        const EditskillsPage = new EditSkillsPage(this.page);
+        await EditskillsPage.goto();
     }
 
-    async editSkills(skills: Skills) {
-        const editPage = new EditSkillsPage(this.page);
-        await this.goto(skills.name!);
-
-        if (skills.name !== undefined) await editPage.fillSkillsName(skills.name);
-        await editPage.clickSaveButton();
-    }
 
     async editSkillsWithoutSave(skills: Skills) {
         const editPage = new EditSkillsPage(this.page);
-        await this.goto(skills.name!);
+        await this.goto();
 
-        if (skills.name !== undefined) await editPage.fillSkillsName(skills.name);
-        if (skills.description !== undefined) await editPage.fillSkillsDescription(skills.description);
+        if (skills.name !== undefined) {
+            await editPage.fillSkillName(skills.name);
+        }
+
+        if (skills.description !== undefined) {
+            await editPage.fillSkillDescription(skills.description);
+        }
     }
 
     async cancelEditSkills() {
-        const addPage = new EditSkillsPage(this.page);
-        await addPage.clickCancelButton();
+        const editPage = new EditSkillsPage(this.page);
+        await this.goto();
+        await editPage.clickCancelButton();
     }
 
-    async editAndVerifySkills(skills: Skills) {
+    async editAndVerifySkills(skills: Skills): Promise<boolean> {
         const editPage = new EditSkillsPage(this.page);
         await this.editSkillsWithoutSave(skills);
         await editPage.clickSaveButton();
-
-        return await editPage.isSkillsNameErrorVisible();
+        return (
+    await editPage.isSkillsNameErrorVisible()
+    || await editPage.isSkillsDescriptionErrorVisible()
+);
     }
 
-    async isNameErrorVisible() {
-        const page = new EditSkillsPage(this.page);
-        return await page.isSkillsNameErrorVisible();
+    async isNameErrorVisible(): Promise<boolean> {
+        const editPage = new EditSkillsPage(this.page);
+        return editPage.isSkillsNameErrorVisible();
     }
+
+    async isDescriptionErrorVisible(): Promise<boolean> {
+        const editPage = new EditSkillsPage(this.page);
+        return editPage.isSkillsDescriptionErrorVisible();
+    }
+        async copySkill(): Promise<string> {
+        const skillsPage = new SkillsPage(this.page);
+        const name = await skillsPage.getThirdSkillName();
+
+        if (!name) {
+            throw new Error('No skill found to copy');
+        }
+
+        return name;
+    }
+    async isSkillExist(name: string): Promise<boolean> {
+        const skillsPage = new SkillsPage(this.page);
+        return skillsPage.isSkillExist(name);
+    }
+
+
 }
