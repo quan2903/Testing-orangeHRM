@@ -28,7 +28,10 @@ export class AddJobTitlesPage {
     }
 
     async clickSaveButton() {
-        await this.page.getByRole('button', { name: 'Save' }).click();
+    await Promise.all([
+        this.page.waitForURL('**/admin/viewJobTitleList'),
+        this.page.getByRole('button', { name: 'Save' }).click(),
+    ]);
     }
 
     async clickCancelButton() {
@@ -76,25 +79,53 @@ export class AddJobTitlesPage {
      * Kiểm tra job title đã tồn tại theo logic scroll + row
      */
     async isJobTitleExist(name: string, description?: string): Promise<boolean> {
-        if (!name) return false;
+    if (!name) return false;
 
-        try {
-            const rows = this.page.locator('.oxd-table-card');
-            const count = await rows.count();
+    // Wait for at least one job row to be visible instead of relying on .oxd-table-body
+    // which may not exist or may be removed in certain app versions.
+    await this.page.locator('.oxd-table-card').first().waitFor({ state: 'visible', timeout: 5000 });
 
-            for (let i = 0; i < count; i++) {
-                const row = rows.nth(i);
-                await row.scrollIntoViewIfNeeded();
-                const text = await row.innerText();
-                if (text.includes(name) && (!description || text.includes(description))) {
-                    return true;
-                }
-            }
-            return false;
-        } catch {
-            return false;
+    const expectedName = name.trim();
+    const expectedDesc = description?.trim();
+
+
+    while (true) {
+        const rows = this.page.locator('.oxd-table-card')
+        const count = await rows.count();
+
+        for (let i = 0; i < count; i++) {
+            const row = rows.nth(i);
+
+            const jobName = (
+                await row.locator('.oxd-table-cell').nth(1).innerText()
+            ).trim();
+
+            if (jobName !== expectedName) continue;
+
+            if (!expectedDesc) return true;
+
+            const jobDesc = (
+                await row.locator('.oxd-table-cell').nth(2).innerText()
+            ).trim();
+
+            if (jobDesc === expectedDesc) return true;
         }
+
+        // 👉 NÚT NEXT PAGE (BIẾN MẤT Ở TRANG CUỐI)
+        const nextBtn = this.page.locator(
+            '.oxd-pagination-page-item--previous-next'
+        );
+
+        // 👉 Trang cuối: button không còn trong DOM
+        if (await nextBtn.count() === 0) break;
+
+        await nextBtn.click();
+        await this.page.waitForTimeout(300);
     }
+
+    return false;
+}
+
   async isGlobalErrorNotificationVisible(
     pattern: string | RegExp = /Error|Invalid|Failed|Unable|Not allowed|Already exists/
   ): Promise<boolean> {

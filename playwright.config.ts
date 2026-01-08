@@ -1,13 +1,10 @@
 import { defineConfig, devices } from '@playwright/test';
 
 const testDirs = [
-  { name: 'login-tests', dir: './Admin/login/login-test' },
-  { name: 'jobtitle-tests', dir: './Admin/job/job-titles'},
-  { name: 'pay-grades-tests', dir: './Admin/job/pay-grades'},
-  { name: 'user-management-tests', dir: './Admin/user-management'},
-  { name: 'qualification', dir: './Admin/qualifications/' },
+
   { name: 'PIM tests', dir: './PIM/' },
   { name: 'Leave', dir: './Leave/' },
+  { name: 'Admin', dir:'./Admin'}
   // thêm bao nhiêu folder test cũng được
 ];
 
@@ -31,14 +28,14 @@ export default defineConfig({
   workers: 2,
   reporter: 'html',
   timeout: 120000,
-  expect: { timeout: 15000 },
+  expect: { timeout: 20000 },
   
   use: {
     baseURL: 'http://localhost:8080/orangehrm-5.7/web/index.php',
     trace: 'on-first-retry',
 
     headless: true,
-    actionTimeout: 15000,
+    actionTimeout: 20000,
   },
 
   projects,

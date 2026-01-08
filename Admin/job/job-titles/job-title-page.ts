@@ -13,18 +13,7 @@ export class JobTitlesPage {
     async clickAddButton(){
         await this.page.getByRole('button', {name: 'Add' }).click();
     }
-    async isJobTitlesexist(name: string): Promise<boolean> {
-    const jobTitle = this.page.locator('.oxd-table-card', {
-        hasText: name
-    });
 
-    try {
-        await jobTitle.first().waitFor({ state: 'visible', timeout: 10000 });
-        return true;
-    } catch {
-        return false;
-    }
-    }
     async clickEditButton(name: string) {
         const jobTitle = this.page.locator(`.oxd-table-card >> text=${name}`);
         await jobTitle.first().waitFor({ state: 'visible', timeout: 10000 });

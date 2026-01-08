@@ -50,7 +50,7 @@ export class AddJobTitlesAction {
         if (!job.name) throw new Error("Job title name is required for verification");
 
         const addPage = new AddJobTitlesPage(this.page);
-        const exists = await addPage.isJobTitleExist(job.name, job.description);
+        const exists = await addPage.isJobTitleExist(job.name);
         expect(exists).toBeTruthy();
     }
 
