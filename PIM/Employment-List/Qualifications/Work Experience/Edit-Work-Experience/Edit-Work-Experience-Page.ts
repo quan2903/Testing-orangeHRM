@@ -4,7 +4,6 @@ export class EditWorkExperiencePage {
     constructor(private page: Page) {}
 
     async gotoEdit(workExperienceIndex: number) {
-        // Giả sử có 1 nút Edit cho từng row kinh nghiệm làm việc
         const editBtn = this.page.locator('.work-experience-row').nth(workExperienceIndex).getByRole('button', { name: 'Edit' });
         await editBtn.click();
     }

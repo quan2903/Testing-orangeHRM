@@ -10,8 +10,6 @@ export class AddPayGradesAction {
         const addPage = new AddPayGradesPage(this.page);
         await addPage.goto();
     }
-
-    // === Flow cũ: thêm + save + chọn currency ===
     async addPayGrade(payGrade: PayGradeType) {
         const addPage = new AddPayGradesPage(this.page);
         await addPage.goto();
@@ -32,7 +30,6 @@ export class AddPayGradesAction {
 
         await addPage.saveNameOnly();
         await addPage.page.waitForTimeout(5000);
-        // Cancel currency → vẫn lưu tên
         await addPage.cancelCurrency();
     }
 

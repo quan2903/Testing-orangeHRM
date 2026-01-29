@@ -1,10 +1,9 @@
 import { faker } from '@faker-js/faker';
-import { ApplyLeaveType } from './Assign-Leave-Type';
+import { ApplyLeaveType } from './Apply-Leave-Type';
 
 export class ApplyLeaveFactory {
     constructor(private base?: Partial<ApplyLeaveType>) {}
 
-    // ================== DATE HELPERS (INLINE) ==================
 private formatDate(date: Date): string {
     const dd = String(date.getDate()).padStart(2, '0');
     const mm = String(date.getMonth() + 1).padStart(2, '0');
@@ -25,7 +24,6 @@ private formatDate(date: Date): string {
         return this.formatDate(faker.date.recent({ days }));
     }
 
-    // ================== BASE VALID ==================
     private baseValidOneDay(): ApplyLeaveType {
         return {
             leaveType: this.base?.leaveType ?? 'US - Bereavement',
@@ -36,7 +34,6 @@ private formatDate(date: Date): string {
         };
     }
 
-    // ================== COMMENT ==================
     createComment1CharacterAllNumber(): ApplyLeaveType {
         return {
             ...this.baseValidOneDay(),
@@ -81,7 +78,7 @@ private formatDate(date: Date): string {
         };
     }
 
-    // ================== SPECIFIC TIME ==================
+
     createValidSpecificTime(): ApplyLeaveType {
         return {
             ...this.baseValidOneDay(),
@@ -123,7 +120,7 @@ private formatDate(date: Date): string {
     return data;
 }
 
-    // ================== MULTI DAY ==================
+
     createMultiDayValidFromToday(days: number): ApplyLeaveType {
         return {
             leaveType: this.base?.leaveType ?? 'Annual Leave',
@@ -143,7 +140,6 @@ private formatDate(date: Date): string {
         };
     }
 
-    // ================== INVALID DATE ==================
     createFromDateAlphabet(): ApplyLeaveType {
         return {
             ...this.baseValidOneDay(),
@@ -165,7 +161,6 @@ private formatDate(date: Date): string {
         };
     }
 
-    // ================== PAST DATE ==================
     createOneDayInPast(): ApplyLeaveType {
         return {
             ...this.baseValidOneDay(),

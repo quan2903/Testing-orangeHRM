@@ -7,11 +7,13 @@ export class ApplyLeavePage {
     async goto(): Promise<void> {
         await new LeavePage(this.page).gotoApply();
     }
-
-    // ================== COMMON HELPERS ==================
     private async fillIfProvided(locator: Locator, value?: string): Promise<void> {
         if (!value) return;
-        await locator.fill(value);
+        await locator.click();
+        await this.page.waitForTimeout(100);
+        await locator.clear()
+        await this.page.waitForTimeout(100);
+        await locator.type(value);
     }
 
     private async isErrorVisible(pattern: string | RegExp): Promise<boolean> {
@@ -27,7 +29,6 @@ export class ApplyLeavePage {
         }
     }
 
-    // ================== ACTIONS ==================
     async chooseLeaveType(value?: string): Promise<void> {
       
 
@@ -52,11 +53,6 @@ export class ApplyLeavePage {
         );
     }
 
-    /**
-     * ⚠️ DÙNG CHO CẢ Duration (1 ngày) & Partial Day (nhiều ngày)
-     * - UI sẽ render dropdown khác nhau
-     * - form i index thay đổi → kiểm tra tồn tại trước khi click
-     */
     async chooseDuration(value?: string): Promise<void> {
         if (!value) return;
 
@@ -98,7 +94,6 @@ export class ApplyLeavePage {
         await this.page.getByRole('button', { name: 'Apply' }).click();
     }
 
-    // ================== ERROR CHECKS ==================
     async isLeaveTypeErrorVisible(): Promise<boolean> {
         return this.isErrorVisible('Required');
     }

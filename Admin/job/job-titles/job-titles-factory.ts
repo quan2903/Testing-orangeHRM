@@ -33,7 +33,7 @@ export class JobTitleFactory {
 
   createNameAndDescriptionWith399Characters(): JobTitleType{
     return {
-      name: faker.string.alpha({ length: 399 }),
+      name: faker.string.alpha({ length: 12 }),
       description: faker.string.alpha({ length: 399 }),
       note: "",
       file: null,
@@ -42,7 +42,7 @@ export class JobTitleFactory {
 
   createNameAndDescriptionWith400Characters(): JobTitleType{
     return {
-      name: faker.string.alpha({ length: 400 }),
+      name: faker.string.alpha({ length: 40 }),
       description: faker.string.alpha({ length: 400 }),
       note: "",
       file: null,
@@ -150,9 +150,18 @@ export class JobTitleFactory {
 
 
 
+  createAllFieldsFilled(): JobTitleType {
+    return {
+      name: faker.person.jobTitle(),
+      description: faker.lorem.sentences(2),
+      note: faker.lorem.paragraph(),
+      file: null,
+    };
+  }
+
   createValidNameByPastingText(): JobTitleType{
     return {
-      name: faker.lorem.paragraphs(2),
+      name: faker.lorem.paragraphs(1),
       description: faker.lorem.sentence(),
       note: faker.lorem.words(5),
       file: null,

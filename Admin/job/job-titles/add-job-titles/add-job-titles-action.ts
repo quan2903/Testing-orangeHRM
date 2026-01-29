@@ -1,4 +1,3 @@
-// add-job-titles-action.ts
 import { Page, expect } from "@playwright/test";
 import { AddJobTitlesPage } from "./add-job-titles-page";
 

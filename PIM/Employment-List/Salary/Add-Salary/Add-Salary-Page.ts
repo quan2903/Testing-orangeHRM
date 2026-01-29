@@ -69,7 +69,7 @@ export class AddSalaryPage {
     }
 
     async selectCurrency(label?: string) {
-        await this.page.waitForTimeout(300); // cho form re-render
+        await this.page.waitForTimeout(300); 
 
         const dropdown = this.page
             .locator('.oxd-input-group')

@@ -4,10 +4,6 @@ import { Location } from './locations-type';
 export class LocationFactory {
     constructor(private base?: Partial<Location>) {}
 
-    /* =========================
-     * Helpers
-     * ========================= */
-
     private baseValid(): Location {
         return {
             Name: faker.string.alpha({ length: 5 }),
@@ -275,9 +271,6 @@ export class LocationFactory {
         return { ...this.baseValid(), Notes: this.letters(10) + ' ', ...this.base };
     }
 
-    /* =========================
-     * EMPTY / NEGATIVE
-     * ========================= */
 
     createAllFieldsEmpty(): Location {
         return {

@@ -66,7 +66,6 @@ test.describe('Apply Leave - Test Cases', () => {
         await expect(page.getByText('Successfully Saved')).toBeVisible();
     });
 
-    // ================= NEGATIVE =================
 
     test('TC06 - Không chọn From Date', async ({ page }) => {
         const action = new ApplyLeaveAction(page);

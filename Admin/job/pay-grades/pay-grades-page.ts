@@ -6,19 +6,16 @@ export class PayGradesPage {
 
 
     async clickAddButton() {
-        // wait a moment for page to stabilize
         try {
             await this.page.waitForLoadState('networkidle', { timeout: 2000 });
         } catch {}
 
-        // Primary selector: accessible role button with name 'Add'
         const addButtons = this.page.getByRole('button', { name: 'Add' });
         if (await addButtons.count() > 0) {
             await addButtons.first().click();
             return;
         }
 
-        // Fallbacks: try several common alternatives (localized text, icon+text, CSS classes)
         const fallbacks = [
             'button:has-text("Add")',
             'button:has-text(" Add")',

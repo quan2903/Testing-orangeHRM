@@ -18,7 +18,7 @@ export class AddWorkExperiencePage {
 
 async fillJobTitle(jobTitle?: string) {
     if (!jobTitle) return;
-    const input = this.page.locator('form').filter({ hasText: 'CompanyJob TitleFromToComment' }).getByRole('textbox').nth(1); // Playwright tìm input dựa theo label
+    const input = this.page.locator('form').filter({ hasText: 'CompanyJob TitleFromToComment' }).getByRole('textbox').nth(1); 
     await input.waitFor({ state: 'visible', timeout: 5000 });
     await input.fill(jobTitle);
 }

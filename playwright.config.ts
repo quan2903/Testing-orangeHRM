@@ -5,7 +5,7 @@ const testDirs = [
   { name: 'PIM tests', dir: './PIM/' },
   { name: 'Leave', dir: './Leave/' },
   { name: 'Admin', dir:'./Admin'}
-  // thêm bao nhiêu folder test cũng được
+
 ];
 
 const browsers = [

@@ -26,12 +26,10 @@ export class AddPayGradesPage {
         await this.page.getByPlaceholder('Type here').nth(1).fill(maximumSalary.toString());
     }
 
-    // Lưu tên bậc lương → chuyển sang màn hình Add Currency
     async saveNameOnly() {
         await this.page.getByRole('button', { name: 'Save' }).click();
     }
 
-    // Cancel ở màn hình Add Currency
     async cancelCurrency() {
         await this.page.getByRole('button', { name: 'Cancel' }).click();
     }
@@ -43,8 +41,6 @@ export class AddPayGradesPage {
     async clickCancelButton() {
         await this.page.getByRole('button', { name: 'Cancel' }).click();
     }
-
-    // Error helpers
     async isErrorVisible(field: 'name' | 'salary'): Promise<boolean> {
         const base = this.page.locator('span.oxd-text.oxd-text--span.oxd-input-field-error-message');
         let error;
@@ -96,7 +92,6 @@ export class AddPayGradesPage {
         }
     }
 
-    // Full fill và Save + Add Currency
     async fillPayGradeDetails(name: string, currency?: string, minimumSalary?: number, maximumSalary?: number) {
         if (name) await this.fillName(name);
         if (currency) await this.fillCurrency(currency);

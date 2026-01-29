@@ -1,6 +1,6 @@
 import { Page } from "playwright-core";
 import { ApplyLeavePage } from "./Apply-Leave-Page";
-import { ApplyLeaveType } from "./Assign-Leave-Type";
+import { ApplyLeaveType } from "./Apply-Leave-Type";
 
 export class ApplyLeaveAction {
     private pageUI: ApplyLeavePage;

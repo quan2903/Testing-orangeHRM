@@ -29,7 +29,7 @@ export class AddJobTitlesPage {
 
     async clickSaveButton() {
     await Promise.all([
-        this.page.waitForURL('**/admin/viewJobTitleList'),
+       
         this.page.getByRole('button', { name: 'Save' }).click(),
     ]);
     }
@@ -75,22 +75,19 @@ export class AddJobTitlesPage {
         return this.isErrorVisible('note');
     }
 
-    /**
-     * Kiểm tra job title đã tồn tại theo logic scroll + row
-     */
     async isJobTitleExist(name: string, description?: string): Promise<boolean> {
     if (!name) return false;
 
-    // Wait for at least one job row to be visible instead of relying on .oxd-table-body
-    // which may not exist or may be removed in certain app versions.
-    await this.page.locator('.oxd-table-card').first().waitFor({ state: 'visible', timeout: 5000 });
-
     const expectedName = name.trim();
     const expectedDesc = description?.trim();
-
+    let currentPage = 1;
 
     while (true) {
-        const rows = this.page.locator('.oxd-table-card')
+        // Wait for table to load on current page
+        await this.page.waitForLoadState('networkidle');
+        await this.page.locator('.oxd-table-card').first().waitFor({ state: 'visible', timeout: 5000 });
+
+        const rows = this.page.locator('.oxd-table-card');
         const count = await rows.count();
 
         for (let i = 0; i < count; i++) {
@@ -111,16 +108,19 @@ export class AddJobTitlesPage {
             if (jobDesc === expectedDesc) return true;
         }
 
-        // 👉 NÚT NEXT PAGE (BIẾN MẤT Ở TRANG CUỐI)
-        const nextBtn = this.page.locator(
-            '.oxd-pagination-page-item--previous-next'
-        );
-
-        // 👉 Trang cuối: button không còn trong DOM
-        if (await nextBtn.count() === 0) break;
-
-        await nextBtn.click();
-        await this.page.waitForTimeout(300);
+        // Get Next button more reliably
+        const nextBtn = this.page.locator('.oxd-pagination-page-item--previous-next').last(); // Last one is Next
+        
+        // Try to click Next
+        try {
+            await nextBtn.click({ timeout: 2000 });
+            await this.page.waitForLoadState('networkidle');
+            await this.page.waitForTimeout(500);
+            currentPage++;
+        } catch {
+            // If click fails, we're at the last page
+            break;
+        }
     }
 
     return false;

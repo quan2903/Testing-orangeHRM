@@ -4,8 +4,8 @@ import { NationalitiesPage } from "../nationalities-page";
 import { AddNationalitiesAction } from "./add-nationalities-action";
 import { NationalitiesFactory } from "../nationalities-factory";
 
-const ADMIN_USERNAME = process.env.ADMIN_USERNAME;
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+const ADMIN_USERNAME = process.env.ADMIN_USERNAME!;
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD!;
 
 test.beforeEach(async ({ page }) => {
   const loginPage = new LoginPage(page);
@@ -86,13 +86,13 @@ test.describe("Kiểm tra thêm mới quốc tịch hợp lệ", () => {
   test("Tên quốc tịch trùng nhưng khác hoa/thường", async ({ page }) => {
     const action = new AddNationalitiesAction(page);
 
-    const base = factory.createVa
+    const base = factory.createValidName();
     await action.addAndVerifyNationality({ name: base.name });
 
-    const dup = factory.createSameNameDifferentCase(base.name);
+    const dup = factory.createSameNameDifferentCase(base.name!);
     await action.addNationality({ name: dup.name });
 
-    const exists = await action.isNationalityExist(dup.name);
+    const exists = await action.isNationalityExist(dup.name!);
     expect(exists).toBeTruthy();
   });
 });
@@ -139,7 +139,7 @@ test.describe("Kiểm tra thêm mới quốc tịch không hợp lệ", () => {
     const action = new AddNationalitiesAction(page);
 
     const existingName = factory.createValidName();
-    await action.addAndVerifyNationalities({ name: existingName.name });
+    await action.addAndVerifyNationality({ name: existingName.name });
 
     await action.addNationality({ name: existingName.name });
     expect(await action.isNameErrorVisible()).toBeTruthy();

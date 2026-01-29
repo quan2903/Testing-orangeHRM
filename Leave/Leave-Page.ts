@@ -13,7 +13,6 @@ export class LeavePage {
 
     async gotoAssignLeave() {
 
-    
         await this.page.getByRole('link', { name: 'Assign Leave' }).click();
     }
 

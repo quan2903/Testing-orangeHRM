@@ -60,6 +60,18 @@ export class NationalitiesFactory {
     };
   }
 
+  createValidName(): NationalityType {
+    return {
+      name: faker.location.country(),
+    };
+  }
+
+  createSameNameDifferentCase(baseName: string): NationalityType {
+    return {
+      name: baseName.toUpperCase(),
+    };
+  }
+
   createValidNameSameAsExistingDifferentCase(existingName: string): NationalityType {
     return {
       name: existingName.toUpperCase(),
